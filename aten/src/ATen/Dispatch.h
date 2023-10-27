@@ -622,6 +622,48 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
           SCALARTYPE6,                             \
           __VA_ARGS__))
 
+#define AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX_AND7(  \
+    SCALARTYPE1,                                      \
+    SCALARTYPE2,                                      \
+    SCALARTYPE3,                                      \
+    SCALARTYPE4,                                      \
+    SCALARTYPE5,                                      \
+    SCALARTYPE6,                                      \
+    SCALARTYPE7,                                      \
+    ...)                                              \
+  AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX(__VA_ARGS__) \
+  AT_DISPATCH_CASE(SCALARTYPE1, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE2, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE3, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE4, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE5, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE6, __VA_ARGS__)          \
+  AT_DISPATCH_CASE(SCALARTYPE7, __VA_ARGS__)
+
+#define AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND7(    \
+    SCALARTYPE1,                                   \
+    SCALARTYPE2,                                   \
+    SCALARTYPE3,                                   \
+    SCALARTYPE4,                                   \
+    SCALARTYPE5,                                   \
+    SCALARTYPE6,                                   \
+    SCALARTYPE7,                                   \
+    TYPE,                                          \
+    NAME,                                          \
+    ...)                                           \
+  AT_DISPATCH_SWITCH(                              \
+      TYPE,                                        \
+      NAME,                                        \
+      AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX_AND7( \
+          SCALARTYPE1,                             \
+          SCALARTYPE2,                             \
+          SCALARTYPE3,                             \
+          SCALARTYPE4,                             \
+          SCALARTYPE5,                             \
+          SCALARTYPE6,                             \
+          SCALARTYPE7,                             \
+          __VA_ARGS__))
+
 #define AT_DISPATCH_INDEX_TYPES(TYPE, NAME, ...)     \
   AT_DISPATCH_SWITCH(                                \
       TYPE,                                          \

@@ -35,6 +35,7 @@ namespace c10 {
   _(int16_t, Short) /* 2 */                              \
   _(int, Int) /* 3 */                                    \
   _(int64_t, Long) /* 4 */                               \
+  _(uint64_t, ULong) /* 4 */                               \
   _(at::Half, Half) /* 5 */                              \
   _(float, Float) /* 6 */                                \
   _(double, Double) /* 7 */                              \
@@ -65,6 +66,7 @@ namespace c10 {
   _(int16_t, Short)                                                \
   _(int, Int)                                                      \
   _(int64_t, Long)                                                 \
+  _(uint64_t, ULong)                                               \
   _(at::Half, Half)                                                \
   _(float, Float)                                                  \
   _(double, Double)                                                \
@@ -81,6 +83,7 @@ namespace c10 {
   _(int16_t, Short)                            \
   _(int, Int)                                  \
   _(int64_t, Long)                             \
+  _(uint64_t, ULong)                           \
   _(at::Half, Half)                            \
   _(float, Float)                              \
   _(double, Double)                            \
@@ -154,6 +157,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)            \
   _(int, Int)                  \
   _(int64_t, Long)
+// uint64_t is not a INT type in our design
 
 #define AT_FORALL_SCALAR_TYPES(_) \
   _(uint8_t, Byte)                \
@@ -161,6 +165,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)               \
   _(int, Int)                     \
   _(int64_t, Long)                \
+  _(uint64_t, ULong)              \
   _(float, Float)                 \
   _(double, Double)
 
@@ -170,6 +175,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)                               \
   _(int, Int)                                     \
   _(int64_t, Long)                                \
+  _(uint64_t, ULong)                              \
   _(float, Float)                                 \
   _(double, Double)                               \
   _(decltype(::c10::impl::ScalarTypeToCPPType<    \
@@ -182,6 +188,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)                                              \
   _(int, Int)                                                    \
   _(int64_t, Long)                                               \
+  _(uint64_t, ULong)                                             \
   _(float, Float)                                                \
   _(double, Double)                                              \
   _(decltype(::c10::impl::ScalarTypeToCPPType<                   \
@@ -197,6 +204,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)                                                           \
   _(int, Int)                                                                 \
   _(int64_t, Long)                                                            \
+  _(uint64_t, ULong)                                                          \
   _(float, Float)                                                             \
   _(double, Double)                                                           \
   _(decltype(::c10::impl::ScalarTypeToCPPType<                                \
@@ -216,6 +224,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)                                        \
   _(int, Int)                                              \
   _(int64_t, Long)                                         \
+  _(uint64_t, ULong)                                       \
   _(float, Float)                                          \
   _(double, Double)                                        \
   _(decltype(::c10::impl::ScalarTypeToCPPType<             \
@@ -238,6 +247,7 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)                                                     \
   _(int, Int)                                                           \
   _(int64_t, Long)                                                      \
+  _(uint64_t, ULong)                                                    \
   _(float, Float)                                                       \
   _(double, Double)                                                     \
   _(decltype(::c10::impl::ScalarTypeToCPPType<                          \
@@ -478,6 +488,7 @@ static inline ScalarType promoteTypes(ScalarType a, ScalarType b) {
   constexpr auto i2 = ScalarType::Short;
   constexpr auto i4 = ScalarType::Int;
   constexpr auto i8 = ScalarType::Long;
+  constexpr auto u8 = ScalarType::ULong;
   constexpr auto f2 = ScalarType::Half;
   constexpr auto f4 = ScalarType::Float;
   constexpr auto f8 = ScalarType::Double;
@@ -540,25 +551,26 @@ static inline ScalarType promoteTypes(ScalarType a, ScalarType b) {
   // clang-format off
   static constexpr ScalarType _promoteTypesLookup[
       NUM_PROMOTE_TYPES][NUM_PROMOTE_TYPES] = {
-      /*        u1  i1  i2  i4  i8  f2  f4  f8  c2  c4  c8  b1  q1  q2  q3  bf  b8  h8*/
-      /* u1 */ {u1, i2, i2, i4, i8, f2, f4, f8, c2, c4, c8, u1, ud, ud, ud, bf, b8, h8},
-      /* i1 */ {i2, i1, i2, i4, i8, f2, f4, f8, c2, c4, c8, i1, ud, ud, ud, bf, b8, h8},
-      /* i2 */ {i2, i2, i2, i4, i8, f2, f4, f8, c2, c4, c8, i2, ud, ud, ud, bf, b8, h8},
-      /* i4 */ {i4, i4, i4, i4, i8, f2, f4, f8, c2, c4, c8, i4, ud, ud, ud, bf, b8, h8},
-      /* i8 */ {i8, i8, i8, i8, i8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
-      /* f2 */ {f2, f2, f2, f2, f2, f2, f4, f8, c2, c4, c8, f2, ud, ud, ud, f4, f4, f4},
-      /* f4 */ {f4, f4, f4, f4, f4, f4, f4, f8, c4, c4, c8, f4, ud, ud, ud, f4, f4, f4},
-      /* f8 */ {f8, f8, f8, f8, f8, f8, f8, f8, c8, c8, c8, f8, ud, ud, ud, f8, f8, f8},
-      /* c2 */ {c2, c2, c2, c2, c2, c2, c4, c8, c2, c4, c8, c2, ud, ud, ud, c4, c4, c4},
-      /* c4 */ {c4, c4, c4, c4, c4, c4, c4, c8, c4, c4, c8, c4, ud, ud, ud, c4, c4, c4},
-      /* c8 */ {c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, ud, ud, ud, c8, c8, c8},
-      /* b1 */ {u1, i1, i2, i4, i8, f2, f4, f8, c2, c4, c8, b1, ud, ud, ud, bf, b8, h8},
-      /* q1 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* q2 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* q3 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* bf */ {bf, bf, bf, bf, bf, f4, f4, f8, c4, c4, c8, bf, ud, ud, ud, bf, bf, bf},
-      /* b8 */ {b8, b8, b8, b8, b8, f4, f4, f8, c4, c4, c8, b8, ud, ud, ud, bf, b8, ud},
-      /* h8 */ {h8, h8, h8, h8, h8, f4, f4, f8, c4, c4, c8, h8, ud, ud, ud, bf, ud, h8},
+      /*        u1  i1  i2  i4  i8  u8, f2  f4  f8  c2  c4  c8  b1  q1  q2  q3  bf  b8  h8*/
+      /* u1 */ {u1, i2, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, u1, ud, ud, ud, bf, b8, h8},
+      /* i1 */ {i2, i1, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, i1, ud, ud, ud, bf, b8, h8},
+      /* i2 */ {i2, i2, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, i2, ud, ud, ud, bf, b8, h8},
+      /* i4 */ {i4, i4, i4, i4, i8, u8, f2, f4, f8, c2, c4, c8, i4, ud, ud, ud, bf, b8, h8},
+      /* i8 */ {i8, i8, i8, i8, i8, u8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
+      /* u8 */ {i8, i8, i8, i8, i8, u8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
+      /* f2 */ {f2, f2, f2, f2, f2, f2, f2, f4, f8, c2, c4, c8, f2, ud, ud, ud, f4, f4, f4},
+      /* f4 */ {f4, f4, f4, f4, f4, f4, f4, f4, f8, c4, c4, c8, f4, ud, ud, ud, f4, f4, f4},
+      /* f8 */ {f8, f8, f8, f8, f8, f8, f8, f8, f8, c8, c8, c8, f8, ud, ud, ud, f8, f8, f8},
+      /* c2 */ {c2, c2, c2, c2, c2, c2, c2, c4, c8, c2, c4, c8, c2, ud, ud, ud, c4, c4, c4},
+      /* c4 */ {c4, c4, c4, c4, c4, c4, c4, c4, c8, c4, c4, c8, c4, ud, ud, ud, c4, c4, c4},
+      /* c8 */ {c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, ud, ud, ud, c8, c8, c8},
+      /* b1 */ {u1, i1, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, b1, ud, ud, ud, bf, b8, h8},
+      /* q1 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* q2 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* q3 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* bf */ {bf, bf, bf, bf, bf, bf, f4, f4, f8, c4, c4, c8, bf, ud, ud, ud, bf, bf, bf},
+      /* b8 */ {b8, b8, b8, b8, b8, b8, f4, f4, f8, c4, c4, c8, b8, ud, ud, ud, bf, b8, ud},
+      /* h8 */ {h8, h8, h8, h8, h8, h8, f4, f4, f8, c4, c4, c8, h8, ud, ud, ud, bf, ud, h8},
   };
   // clang-format on
   return _promoteTypesLookup[static_cast<int>(a)][static_cast<int>(b)];
