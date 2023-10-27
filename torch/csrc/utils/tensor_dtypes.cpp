@@ -28,6 +28,8 @@ std::pair<std::string, std::string> getDtypeNames(at::ScalarType scalarType) {
       return std::make_pair("int32", "int");
     case at::ScalarType::Long:
       return std::make_pair("int64", "long");
+    case at::ScalarType::ULong:
+      return std::make_pair("uint64", "unsigned long");
     case at::ScalarType::Short:
       return std::make_pair("int16", "short");
     case at::ScalarType::Half:

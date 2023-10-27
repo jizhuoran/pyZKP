@@ -41,6 +41,9 @@ inline void store_scalar(void* data, at::ScalarType scalarType, PyObject* obj) {
     case at::kLong:
       *(int64_t*)data = unpackIntegral<int64_t>(obj, "int64");
       break;
+    case at::kULong:
+      *(uint64_t*)data = THPUtils_unpackUInt64(obj);
+      break;
     case at::kHalf:
       *(at::Half*)data =
           at::convert<at::Half, double>(THPUtils_unpackDouble(obj));
@@ -95,6 +98,8 @@ inline PyObject* load_scalar(void* data, at::ScalarType scalarType) {
       return THPUtils_packInt64(*(int32_t*)data);
     case at::kLong:
       return THPUtils_packInt64(*(int64_t*)data);
+    case at::kULong:
+      return THPUtils_packUInt64(*(uint64_t*)data);
     case at::kHalf:
       return PyFloat_FromDouble(
           at::convert<double, at::Half>(*(at::Half*)data));
