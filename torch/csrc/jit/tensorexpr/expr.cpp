@@ -3,6 +3,8 @@
 #include <torch/csrc/jit/tensorexpr/ir.h>
 #include <torch/csrc/jit/tensorexpr/ir_simplifier.h>
 
+#include <iostream>
+
 namespace torch::jit::tensorexpr {
 
 ExprHandle ExprHandle::operator+(const ExprHandle& other) const {

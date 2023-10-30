@@ -2956,6 +2956,9 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     has_symbolic_sizes_strides_ = false;
   }
 
+  // Only for Field data type, return if the tensor is in Montgomary space
+  bool in_montgomary_space_ : 1;
+
   // Tensor is contiguous
   bool is_contiguous_ : 1;
 

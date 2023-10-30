@@ -38,6 +38,7 @@ void check_type(const TensorBase& tensor, ScalarType type, c10::string_view type
 
  AT_FORALL_SCALAR_TYPES_WITH_COMPLEX(DEFINE_CAST)
  AT_FORALL_QINT_TYPES(DEFINE_CAST)
+ AT_FORALL_FIELD_TYPES(DEFINE_CAST)
  #undef DEFINE_CAST
 
  #define DEFINE_ITEM(T, name)      \

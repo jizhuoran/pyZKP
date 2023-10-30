@@ -13,6 +13,7 @@
 #include <c10/util/quint2x4.h>
 #include <c10/util/quint4x2.h>
 #include <c10/util/quint8.h>
+#include <c10/util/Field.h>
 
 #include <complex>
 #include <cstdint>
@@ -35,27 +36,29 @@ namespace c10 {
   _(int16_t, Short) /* 2 */                              \
   _(int, Int) /* 3 */                                    \
   _(int64_t, Long) /* 4 */                               \
-  _(uint64_t, ULong) /* 4 */                               \
-  _(at::Half, Half) /* 5 */                              \
-  _(float, Float) /* 6 */                                \
-  _(double, Double) /* 7 */                              \
-  _(c10::complex<c10::Half>, ComplexHalf) /* 8 */        \
-  _(c10::complex<float>, ComplexFloat) /* 9 */           \
-  _(c10::complex<double>, ComplexDouble) /* 10 */        \
-  _(bool, Bool) /* 11 */                                 \
-  _(c10::qint8, QInt8) /* 12 */                          \
-  _(c10::quint8, QUInt8) /* 13 */                        \
-  _(c10::qint32, QInt32) /* 14 */                        \
-  _(at::BFloat16, BFloat16) /* 15 */                     \
-  _(c10::quint4x2, QUInt4x2) /* 16 */                    \
-  _(c10::quint2x4, QUInt2x4) /* 17 */                    \
-  _(c10::bits1x8, Bits1x8) /* 18 */                      \
-  _(c10::bits2x4, Bits2x4) /* 19 */                      \
-  _(c10::bits4x2, Bits4x2) /* 20 */                      \
-  _(c10::bits8, Bits8) /* 21 */                          \
-  _(c10::bits16, Bits16) /* 22 */                        \
-  _(c10::Float8_e5m2, Float8_e5m2) /* 23 */              \
-  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 24 */
+  _(uint64_t, ULong) /* 5 */                             \
+  _(at::Half, Half) /* 6 */                              \
+  _(float, Float) /* 7 */                                \
+  _(double, Double) /* 8 */                              \
+  _(c10::complex<c10::Half>, ComplexHalf) /* 9 */        \
+  _(c10::complex<float>, ComplexFloat) /* 10 */          \
+  _(c10::complex<double>, ComplexDouble) /* 11 */        \
+  _(bool, Bool) /* 12 */                                 \
+  _(c10::qint8, QInt8) /* 13 */                          \
+  _(c10::quint8, QUInt8) /* 14 */                        \
+  _(c10::qint32, QInt32) /* 15 */                        \
+  _(at::BFloat16, BFloat16) /* 16 */                     \
+  _(c10::quint4x2, QUInt4x2) /* 17 */                    \
+  _(c10::quint2x4, QUInt2x4) /* 18 */                    \
+  _(c10::bits1x8, Bits1x8) /* 19 */                      \
+  _(c10::bits2x4, Bits2x4) /* 20 */                      \
+  _(c10::bits4x2, Bits4x2) /* 21 */                      \
+  _(c10::bits8, Bits8) /* 22 */                          \
+  _(c10::bits16, Bits16) /* 23 */                        \
+  _(c10::Float8_e5m2, Float8_e5m2) /* 24 */              \
+  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 25 */          \
+  _(c10::Field64, Field64) /* 26 */
+  
 
 // If you want to support ComplexHalf for real, add ComplexHalf
 // into this macro (and change the name).  But beware: convert()
@@ -272,6 +275,9 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(c10::qint32, QInt32)        \
   _(c10::quint4x2, QUInt4x2)    \
   _(c10::quint2x4, QUInt2x4)
+
+#define AT_FORALL_FIELD_TYPES(_) \
+  _(c10::Field64, Field64) 
 
 #define AT_FORALL_COMPLEX_TYPES(_)     \
   _(c10::complex<float>, ComplexFloat) \

@@ -99,6 +99,8 @@ std::string Dtype::ToCppString() const {
       return "qint8";
     case ScalarType::QUInt8:
       return "quint8";
+    case ScalarType::Field64:
+      return "field64";
     default:
       throw unsupported_dtype();
   }

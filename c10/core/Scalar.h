@@ -56,6 +56,7 @@ class C10_API Scalar {
       ComplexHalf,
       DEFINE_IMPLICIT_CTOR)
   AT_FORALL_COMPLEX_TYPES(DEFINE_IMPLICIT_CTOR)
+  AT_FORALL_FIELD_TYPES(DEFINE_IMPLICIT_CTOR)
 
 #undef DEFINE_IMPLICIT_CTOR
 
@@ -312,7 +313,7 @@ class C10_API Scalar {
   // We can't set v in the initializer list using the
   // syntax v{ .member = ... } because it doesn't work on MSVC
  private:
-  enum class Tag { HAS_d, HAS_i, HAS_z, HAS_b, HAS_sd, HAS_si, HAS_sb };
+  enum class Tag { HAS_d, HAS_i, HAS_ff, HAS_z, HAS_b, HAS_sd, HAS_si, HAS_sb };
 
   // NB: assumes that self has already been cleared
   C10_ALWAYS_INLINE void moveFrom(Scalar&& rhs) noexcept {
@@ -331,6 +332,7 @@ class C10_API Scalar {
   union v_t {
     double d{};
     int64_t i;
+    // uint64_t ff;
     c10::complex<double> z;
     c10::intrusive_ptr_target* p;
     v_t() {} // default constructor
@@ -347,8 +349,15 @@ class C10_API Scalar {
 
   template <
       typename T,
+      typename std::enable_if<c10::is_field<T>::value, bool>::type* = nullptr>
+  Scalar(T vv, bool) : tag(Tag::HAS_i) {
+    v.i = 1; //convert<decltype(v.i), T>(vv);
+  }
+
+  template <
+      typename T,
       typename std::enable_if<
-          !std::is_integral<T>::value && !c10::is_complex<T>::value,
+          !std::is_integral<T>::value && !c10::is_complex<T>::value && !c10::is_field<T>::value,
           bool>::type* = nullptr>
   Scalar(T vv, bool) : tag(Tag::HAS_d) {
     v.d = convert<decltype(v.d), T>(vv);
