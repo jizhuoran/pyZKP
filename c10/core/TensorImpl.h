@@ -55,6 +55,12 @@ class TensorBase;
 
 namespace c10 {
 
+#define DISPATCH_CASE(N) \
+case N: { \
+    data_type_ = caffe2::TypeMeta::Make<c10::BigInteger<N>>(); \
+    break; \
+}
+
 /**
  * A utility function to convert vector<int> to vector<int64_t>.
  */
@@ -2331,6 +2337,22 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     data_type_ = data_type;
   }
 
+
+
+  void make_BigInteger() {
+
+    auto sizes = sizes_and_strides_.sizes_arrayref();
+    switch(sizes[dim()-1]) {
+      GENERATE_CASES_UP_TO_MAX_BIGINT(DISPATCH_CASE)
+      default:
+        throw std::runtime_error("Invalid size of big integer");
+        break;
+    }
+
+    set_sizes_contiguous(sizes.slice(0, dim()-1));
+
+  }
+
   void empty_tensor_restride_symint(MemoryFormat memory_format);
 
   /**
@@ -3295,6 +3317,7 @@ static_assert(
 #undef C10_CLANG_MAJOR_VERSION
 #undef C10_GCC_VERSION
 #undef C10_GCC_VERSION_MINOR
+#undef DISPATCH_CASE
 
 } // namespace c10
 

@@ -101,6 +101,8 @@ std::string Dtype::ToCppString() const {
       return "quint8";
     case ScalarType::Field64:
       return "field64";
+    case ScalarType::InternalBigInteger:
+      return "big_integer";
     default:
       throw unsupported_dtype();
   }

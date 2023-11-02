@@ -1,3 +1,5 @@
+#pragma once
+
 #if !defined(C10_INTERNAL_INCLUDE_FIELD_REMAINING_H)
 #error \
     "c10/util/Field_utils.h is not meant to be individually included. Include c10/util/Field.h instead."
@@ -12,6 +14,17 @@ struct is_field : public std::false_type {};
 
 template<>
 struct is_field<c10::Field64> : public std::true_type {};
+
+template<>
+struct is_field<c10::InternalBigInteger> : public std::true_type {};
+
+#define TEMPLATE_DECLARE(N) \
+    template<> \
+    struct is_field<c10::BigInteger<N>> : public std::true_type {};
+
+GENERATE_CASES_UP_TO_MAX_BIGINT(TEMPLATE_DECLARE);
+
+#undef TEMPLATE_DECLARE
 
 // // Extract double from std::complex<double>; is identity otherwise
 // // TODO: Write in more idiomatic C++17

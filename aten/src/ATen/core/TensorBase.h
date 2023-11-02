@@ -247,6 +247,11 @@ class TORCH_API TensorBase {
   IntArrayRef strides() const {
     return impl_->strides();
   }
+
+  void make_BigInteger() {
+    impl_->make_BigInteger();
+  }
+
   // See impl::get_opt_names in ATen/NamedTensor.h for docs.
   c10::optional<DimnameList> opt_names() const {
     return impl::get_opt_names(unsafeGetTensorImpl());

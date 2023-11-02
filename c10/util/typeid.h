@@ -299,7 +299,7 @@ class _Uninitialized final {};
 //
 
 // item sizes for TypeMeta::itemsize() fast path
-static constexpr uint8_t scalarTypeItemSizes[NumScalarTypes] = {
+static constexpr uint32_t scalarTypeItemSizes[NumScalarTypes] = {
 #define SCALAR_TYPE_SIZE(T, name) sizeof(T),
     AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SCALAR_TYPE_SIZE)
 #undef SCALAR_TYPE_SIZE

@@ -28,6 +28,16 @@ inline PyObject* THPUtils_packUInt64(uint64_t value) {
   return PyLong_FromUnsignedLongLong(value);
 }
 
+inline PyObject* THPUtils_packUInt64List(const uint64_t* value, size_t num_elems) {
+  PyObject* pList = PyList_New(0);
+  for (size_t i = 0; i < num_elems; ++i) {
+    PyObject* pValue = PyLong_FromUnsignedLongLong(value[i]);
+    PyList_Append(pList, pValue);
+    Py_DECREF(pValue);
+  }
+  return pList;
+}
+
 inline PyObject* THPUtils_packDoubleAsInt(double value) {
   return PyLong_FromDouble(value);
 }
