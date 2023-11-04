@@ -142,6 +142,8 @@ py::handle type_caster<c10::Scalar>::cast(
     return py::cast(scalar.toBool()).release();
   } else if (scalar.isComplex()) {
     return py::cast(scalar.toComplexDouble()).release();
+  } else if (scalar.isUnsigned()) {
+    return py::cast(scalar.toULong()).release();
   } else {
     TORCH_INTERNAL_ASSERT(0, "unrecognized scalar type ", scalar.type());
   }

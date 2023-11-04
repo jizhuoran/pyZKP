@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include "c10/util/BigInteger.h"
+#include "c10/util/Field64.h"
 
 #include <c10/core/OptionalRef.h>
 #include <c10/core/ScalarType.h>
@@ -90,6 +92,8 @@ class C10_API Scalar {
       return checked_convert<type, bool>(v.i, #type);                 \
     } else if (Tag::HAS_i == tag) {                                   \
       return checked_convert<type, int64_t>(v.i, #type);              \
+    } else if (Tag::HAS_u == tag) {                                   \
+      return checked_convert<type, uint64_t>(v.u, #type);             \
     } else if (Tag::HAS_si == tag) {                                  \
       TORCH_CHECK(false, "tried to get " #name " out of SymInt")      \
     } else if (Tag::HAS_sd == tag) {                                  \
@@ -102,6 +106,7 @@ class C10_API Scalar {
 
   // TODO: Support ComplexHalf accessor
   AT_FORALL_SCALAR_TYPES_WITH_COMPLEX(DEFINE_ACCESSOR)
+  DEFINE_ACCESSOR(uint64_t, ULong)
 
 #undef DEFINE_ACCESSOR
 
@@ -155,6 +160,9 @@ class C10_API Scalar {
   bool isIntegral(bool includeBool) const {
     return Tag::HAS_i == tag || Tag::HAS_si == tag ||
         (includeBool && isBoolean());
+  }
+  bool isUnsigned() const {
+    return Tag::HAS_u == tag;
   }
 
   bool isComplex() const {
@@ -263,6 +271,8 @@ class C10_API Scalar {
       return ScalarType::Double;
     } else if (isIntegral(/*includeBool=*/false)) {
       return ScalarType::Long;
+    } else if (isUnsigned()) {
+      return ScalarType::ULong;
     } else if (isBoolean()) {
       return ScalarType::Bool;
     } else {
@@ -313,7 +323,7 @@ class C10_API Scalar {
   // We can't set v in the initializer list using the
   // syntax v{ .member = ... } because it doesn't work on MSVC
  private:
-  enum class Tag { HAS_d, HAS_i, HAS_ff, HAS_z, HAS_b, HAS_sd, HAS_si, HAS_sb };
+  enum class Tag { HAS_d, HAS_i, HAS_u, HAS_z, HAS_b, HAS_sd, HAS_si, HAS_sb };
 
   // NB: assumes that self has already been cleared
   C10_ALWAYS_INLINE void moveFrom(Scalar&& rhs) noexcept {
@@ -329,14 +339,19 @@ class C10_API Scalar {
 
   Tag tag;
 
+#define UNION_DECLARE(N) c10::BigInteger<N> bi##N;
+
   union v_t {
     double d{};
     int64_t i;
-    // uint64_t ff;
+    uint64_t u;
     c10::complex<double> z;
     c10::intrusive_ptr_target* p;
+    GENERATE_CASES_UP_TO_MAX_BIGINT(UNION_DECLARE);
     v_t() {} // default constructor
   } v;
+
+#undef UNION_DECLARE
 
   template <
       typename T,
@@ -349,10 +364,30 @@ class C10_API Scalar {
 
   template <
       typename T,
-      typename std::enable_if<c10::is_field<T>::value, bool>::type* = nullptr>
-  Scalar(T vv, bool) : tag(Tag::HAS_i) {
-    v.i = 1; //convert<decltype(v.i), T>(vv);
+      typename std::enable_if<std::is_same<T, c10::InternalBigInteger>::value && c10::is_field<T>::value, bool>::type* = nullptr>
+  Scalar(T vv, bool) : tag(Tag::HAS_u) {
+    v.u = convert<decltype(v.u), T>(vv);;
   }
+
+  template <
+      typename T,
+      typename std::enable_if<std::is_same<T, c10::Field64>::value && c10::is_field<T>::value, bool>::type* = nullptr>
+  Scalar(T vv, bool) : tag(Tag::HAS_u) {
+    v.u = convert<decltype(v.u), T>(vv);;
+  }
+
+
+#define CONVERTOR_DECLARE(N) \
+ template < \
+      typename T, \
+      typename std::enable_if<std::is_same<T, c10::BigInteger<N>>::value && c10::is_field<T>::value, bool>::type* = nullptr> \
+  Scalar(T vv, bool) : tag(Tag::HAS_i) { \
+    v.bi##N = convert<decltype(v.bi##N), T>(vv); \
+  }
+
+GENERATE_CASES_UP_TO_MAX_BIGINT(CONVERTOR_DECLARE);
+
+#undef CONVERTOR_DECLARE
 
   template <
       typename T,

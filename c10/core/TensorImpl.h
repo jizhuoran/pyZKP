@@ -10,6 +10,7 @@
 #include <c10/core/WrapDimMinimal.h>
 #include <c10/core/impl/PyObjectSlot.h>
 #include <c10/core/impl/SizesAndStrides.h>
+#include <c10/core/Curve.h>
 #include <c10/macros/Macros.h>
 #include <c10/util/DimVector.h>
 #include <c10/util/Exception.h>
@@ -1684,6 +1685,23 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     get_extra_meta().custom_storage_error_msg_ = s;
   }
 
+  /**
+  * The curve info of a Tensor if any
+  */
+  Curve curve() const {
+    // TODO: A useful internal assert would be to show that curve_opt_ is null
+    // if it is not a curve tensor.
+    TORCH_CHECK(
+        curve_opt_.has_value(),
+        "curve cannot be run on undefined Tensor");
+    // See NOTE [c10::optional operator usage in CUDA]
+    return *curve_opt_;
+  }
+
+  void to_curve(Curve curve_info, bool in_montspace) {
+    curve_opt_ = curve_info;
+  }
+
  protected:
   /**
    * Returns the human-readable name of the actual type of this object (e.g.,
@@ -3069,6 +3087,10 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
 
   // Call into Python for layout()
   bool python_custom_layout_ : 1;
+
+  // Store the curve information if the tensor stores elliptic curve datas 
+  c10::optional<c10::Curve> curve_opt_;
+
 
   // The set of DispatchKeys which describe this tensor.  NB: this
   // does NOT include Autograd (historically, it did, but

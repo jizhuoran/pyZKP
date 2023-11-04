@@ -441,23 +441,23 @@ Tensor internal_new_from_data(
     pybind11::gil_scoped_release no_gil;
     maybe_initialize_cuda(device);
 
-#define DISPATCH_CASE(N) \
-case N: { \
-    inferred_scalar_type = ScalarType::BigInteger##N; \
-    break; \
-}
-    if (inferred_scalar_type == ScalarType::InternalBigInteger) {
-      auto sizes = tensor.sizes();
-      switch(sizes[sizes.size()-1]) {
-        GENERATE_CASES_UP_TO_MAX_BIGINT(DISPATCH_CASE)
-        default:
-          throw std::runtime_error("Invalid size of big integer");
-          break;
-      }
-      tensor.make_BigInteger();
-    }
+// #define DISPATCH_CASE(N) \
+// case N: { \
+//     inferred_scalar_type = ScalarType::BigInteger##N; \
+//     break; \
+// }
+//     if (inferred_scalar_type == ScalarType::InternalBigInteger) {
+//       auto sizes = tensor.sizes();
+//       switch(sizes[sizes.size()-1]) {
+//         GENERATE_CASES_UP_TO_MAX_BIGINT(DISPATCH_CASE)
+//         default:
+//           throw std::runtime_error("Invalid size of big integer");
+//           break;
+//       }
+//       tensor.make_BigInteger();
+//     }
 
-#undef DISPATCH_CASE
+// #undef DISPATCH_CASE
 
     // However, it is VERY important that we trace the to() call here (even
     // though the reason this is important is a hack).  Without *some* factory

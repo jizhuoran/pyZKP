@@ -4,13 +4,30 @@ import torch
 print(torch.__path__)
 
 x = torch.tensor([[922337203685498, 2, 3], [4, 5, 6]], dtype=torch.big_integer)
-y = torch.tensor([[922337203685477, 2, 3, 10], [4, 5, 6, 8]], dtype=torch.big_integer)
+y = torch.tensor([[922337203685477, 2, 3, 10], [4, 5, 6, 8], [4, 5, 6, 8]], dtype=torch.big_integer)
+
+
+y = torch.tensor([
+    [[922337203685477, 2, 3, 10], [4, 5, 6, 8], [4, 5, 6, 8]],
+    [[922337203685477, 2, 3, 10], [4, 5, 6, 8], [4, 5, 6, 8]]
+], dtype=torch.big_integer)
 
 print(x)
 print(y)
 
+print(type(x.type()))
 
-print(x[1])
+# x.to_Fq(torch.uint192)
+
+x.to_curve("bls12-381", "fq", "g1", to_mont=True)
+print(x.curve_info())
+# x.to("CUDA")
+
+print(x.shape)
+print(y.shape)
+
+print(x[0][1])
+
 
 # # x = torch.tensor([[9223372036854775809, 2, 3], [4, 5, 6]], dtype=torch.uint64)
 # # y = torch.tensor([[1, 2, 3], [4, 5, 6]], dtype=torch.uint64)

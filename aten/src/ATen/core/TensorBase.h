@@ -252,6 +252,16 @@ class TORCH_API TensorBase {
     impl_->make_BigInteger();
   }
 
+  // c10::CurveMeta* curve_meta() const {
+  //   return impl_->get_curve_meta();
+  // }
+
+  void to_curve(Curve curve_info, bool in_montspace) const {
+    // impl_->to_curve(curve_type, curve_group, curve_field, in_montspace);
+    impl_->to_curve(curve_info, in_montspace);
+
+  }
+
   // See impl::get_opt_names in ATen/NamedTensor.h for docs.
   c10::optional<DimnameList> opt_names() const {
     return impl::get_opt_names(unsafeGetTensorImpl());
@@ -417,6 +427,11 @@ class TORCH_API TensorBase {
   /// Returns a `Tensor`'s device.
   inline Device device() const {
     return impl_->device();
+  }
+
+  /// Returns a `Tensor`'s curve.
+  inline Curve curve() const {
+    return impl_->curve();
   }
 
   /// Returns a `Tensor`'s device index.
