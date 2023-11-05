@@ -5,7 +5,6 @@
 #include <type_traits>
 #include <utility>
 #include "c10/util/BigInteger.h"
-#include "c10/util/Field64.h"
 
 #include <c10/core/OptionalRef.h>
 #include <c10/core/ScalarType.h>
@@ -339,15 +338,12 @@ class C10_API Scalar {
 
   Tag tag;
 
-#define UNION_DECLARE(N) c10::BigInteger<N> bi##N;
-
   union v_t {
     double d{};
     int64_t i;
     uint64_t u;
     c10::complex<double> z;
     c10::intrusive_ptr_target* p;
-    GENERATE_CASES_UP_TO_MAX_BIGINT(UNION_DECLARE);
     v_t() {} // default constructor
   } v;
 
@@ -364,30 +360,10 @@ class C10_API Scalar {
 
   template <
       typename T,
-      typename std::enable_if<std::is_same<T, c10::InternalBigInteger>::value && c10::is_field<T>::value, bool>::type* = nullptr>
+      typename std::enable_if<c10::is_field<T>::value, bool>::type* = nullptr>
   Scalar(T vv, bool) : tag(Tag::HAS_u) {
     v.u = convert<decltype(v.u), T>(vv);;
   }
-
-  template <
-      typename T,
-      typename std::enable_if<std::is_same<T, c10::Field64>::value && c10::is_field<T>::value, bool>::type* = nullptr>
-  Scalar(T vv, bool) : tag(Tag::HAS_u) {
-    v.u = convert<decltype(v.u), T>(vv);;
-  }
-
-
-#define CONVERTOR_DECLARE(N) \
- template < \
-      typename T, \
-      typename std::enable_if<std::is_same<T, c10::BigInteger<N>>::value && c10::is_field<T>::value, bool>::type* = nullptr> \
-  Scalar(T vv, bool) : tag(Tag::HAS_i) { \
-    v.bi##N = convert<decltype(v.bi##N), T>(vv); \
-  }
-
-GENERATE_CASES_UP_TO_MAX_BIGINT(CONVERTOR_DECLARE);
-
-#undef CONVERTOR_DECLARE
 
   template <
       typename T,

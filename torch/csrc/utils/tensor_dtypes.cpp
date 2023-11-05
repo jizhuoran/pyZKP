@@ -6,15 +6,10 @@
 #include <torch/csrc/utils/object_ptr.h>
 #include <torch/csrc/utils/tensor_dtypes.h>
 #include <torch/csrc/utils/tensor_types.h>
+#include "c10/core/ScalarType.h"
 
 namespace torch {
 namespace utils {
-
-#define DISPATCH_CASE(N) \
-case at::ScalarType::BigInteger##N : { \
-    return std::make_pair("uint"+std::to_string(64*N), ""); \
-    break; \
-}
 
 std::pair<std::string, std::string> getDtypeNames(at::ScalarType scalarType) {
   switch (scalarType) {
@@ -76,15 +71,16 @@ std::pair<std::string, std::string> getDtypeNames(at::ScalarType scalarType) {
       return std::make_pair("float8_e4m3fn", "");
     case at::ScalarType::Field64:
       return std::make_pair("field64", "");
-    case at::ScalarType::InternalBigInteger:
+    case at::ScalarType::BigInteger:
       return std::make_pair("big_integer", "");
-    GENERATE_CASES_UP_TO_MAX_BIGINT(DISPATCH_CASE)
+    case at::ScalarType::FiniteField:
+      return std::make_pair("finite_field", "");
+    case at::ScalarType::EllipticCurve:
+      return std::make_pair("elliptic_curve", "");
     default:
       throw std::runtime_error("Unimplemented scalar type");
   }
 }
-
-#undef DISPATCH_CASE
 
 void initializeDtypes() {
   auto torch_module = THPObjectPtr(PyImport_ImportModule("torch"));

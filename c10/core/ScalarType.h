@@ -13,7 +13,7 @@
 #include <c10/util/quint2x4.h>
 #include <c10/util/quint4x2.h>
 #include <c10/util/quint8.h>
-#include <c10/util/Field.h>
+#include <c10/util/BigInteger.h>
 
 #include <complex>
 #include <cstdint>
@@ -57,40 +57,10 @@ namespace c10 {
   _(c10::bits16, Bits16) /* 23 */                        \
   _(c10::Float8_e5m2, Float8_e5m2) /* 24 */              \
   _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 25 */          \
-  _(c10::InternalBigInteger, InternalBigInteger) /* 26 */              \
-  _(c10::Field64, Field64) /* 28 */                      \
-  _(c10::BigInteger<1>, BigInteger1) \
-  _(c10::BigInteger<2>, BigInteger2) \
-  _(c10::BigInteger<3>, BigInteger3) \
-  _(c10::BigInteger<4>, BigInteger4) \
-  _(c10::BigInteger<5>, BigInteger5) \
-  _(c10::BigInteger<6>, BigInteger6) \
-  _(c10::BigInteger<7>, BigInteger7) \
-  _(c10::BigInteger<8>, BigInteger8) \
-  _(c10::BigInteger<9>, BigInteger9) \
-  _(c10::BigInteger<10>, BigInteger10) \
-  _(c10::BigInteger<11>, BigInteger11) \
-  _(c10::BigInteger<12>, BigInteger12) \
-  _(c10::BigInteger<13>, BigInteger13) \
-  _(c10::BigInteger<14>, BigInteger14) \
-  _(c10::BigInteger<15>, BigInteger15) \
-  _(c10::BigInteger<16>, BigInteger16) \
-  _(c10::BigInteger<17>, BigInteger17) \
-  _(c10::BigInteger<18>, BigInteger18) \
-  _(c10::BigInteger<19>, BigInteger19) \
-  _(c10::BigInteger<20>, BigInteger20) \
-  _(c10::BigInteger<21>, BigInteger21) \
-  _(c10::BigInteger<22>, BigInteger22) \
-  _(c10::BigInteger<23>, BigInteger23) \
-  _(c10::BigInteger<24>, BigInteger24) \
-  _(c10::BigInteger<25>, BigInteger25) \
-  _(c10::BigInteger<26>, BigInteger26) \
-  _(c10::BigInteger<27>, BigInteger27) \
-  _(c10::BigInteger<28>, BigInteger28) \
-  _(c10::BigInteger<29>, BigInteger29) \
-  _(c10::BigInteger<30>, BigInteger30) \
-  _(c10::BigInteger<31>, BigInteger31) \
-  _(c10::BigInteger<32>, BigInteger32)
+  _(c10::Field64, Field64) /* 26 */                      \
+  _(c10::BigInteger, BigInteger) /* 27 */                \
+  _(c10::FiniteField, FiniteField) /* 28 */              \
+  _(c10::EllipticCurve, EllipticCurve)
 
 // If you want to support ComplexHalf for real, add ComplexHalf
 // into this macro (and change the name).  But beware: convert()
@@ -300,42 +270,12 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(c10::quint4x2, QUInt4x2)    \
   _(c10::quint2x4, QUInt2x4)
 
-#define AT_FORALL_FIELD_TYPES(_)    \
-  _(uint64_t, ULong)          \
-  _(c10::Field64, Field64)          \
-  _(c10::InternalBigInteger, InternalBigInteger)  \
-  _(c10::BigInteger<1>, BigInteger1) \
-  _(c10::BigInteger<2>, BigInteger2) \
-  _(c10::BigInteger<3>, BigInteger3) \
-  _(c10::BigInteger<4>, BigInteger4) \
-  _(c10::BigInteger<5>, BigInteger5) \
-  _(c10::BigInteger<6>, BigInteger6) \
-  _(c10::BigInteger<7>, BigInteger7) \
-  _(c10::BigInteger<8>, BigInteger8) \
-  _(c10::BigInteger<9>, BigInteger9) \
-  _(c10::BigInteger<10>, BigInteger10) \
-  _(c10::BigInteger<11>, BigInteger11) \
-  _(c10::BigInteger<12>, BigInteger12) \
-  _(c10::BigInteger<13>, BigInteger13) \
-  _(c10::BigInteger<14>, BigInteger14) \
-  _(c10::BigInteger<15>, BigInteger15) \
-  _(c10::BigInteger<16>, BigInteger16) \
-  _(c10::BigInteger<17>, BigInteger17) \
-  _(c10::BigInteger<18>, BigInteger18) \
-  _(c10::BigInteger<19>, BigInteger19) \
-  _(c10::BigInteger<20>, BigInteger20) \
-  _(c10::BigInteger<21>, BigInteger21) \
-  _(c10::BigInteger<22>, BigInteger22) \
-  _(c10::BigInteger<23>, BigInteger23) \
-  _(c10::BigInteger<24>, BigInteger24) \
-  _(c10::BigInteger<25>, BigInteger25) \
-  _(c10::BigInteger<26>, BigInteger26) \
-  _(c10::BigInteger<27>, BigInteger27) \
-  _(c10::BigInteger<28>, BigInteger28) \
-  _(c10::BigInteger<29>, BigInteger29) \
-  _(c10::BigInteger<30>, BigInteger30) \
-  _(c10::BigInteger<31>, BigInteger31) \
-  _(c10::BigInteger<32>, BigInteger32)
+#define AT_FORALL_FIELD_TYPES(_)      \
+  _(uint64_t, ULong)                  \
+  _(c10::Field64, Field64)            \
+  _(c10::BigInteger, BigInteger)      \
+  _(c10::FiniteField, FiniteField)    \
+  _(c10::EllipticCurve, EllipticCurve)
 
 #define AT_FORALL_COMPLEX_TYPES(_)     \
   _(c10::complex<float>, ComplexFloat) \

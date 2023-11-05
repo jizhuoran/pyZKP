@@ -248,19 +248,11 @@ class TORCH_API TensorBase {
     return impl_->strides();
   }
 
-  void make_BigInteger() {
-    impl_->make_BigInteger();
+  void to_curve(Curve curve_info, bool alread_in_mont) const {
+    impl_->to_curve(curve_info, alread_in_mont);
   }
 
-  // c10::CurveMeta* curve_meta() const {
-  //   return impl_->get_curve_meta();
-  // }
-
-  void to_curve(Curve curve_info, bool in_montspace) const {
-    // impl_->to_curve(curve_type, curve_group, curve_field, in_montspace);
-    impl_->to_curve(curve_info, in_montspace);
-
-  }
+  c10::FieldType field() const { return impl_->field(); }
 
   // See impl::get_opt_names in ATen/NamedTensor.h for docs.
   c10::optional<DimnameList> opt_names() const {

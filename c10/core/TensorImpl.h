@@ -28,6 +28,8 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+#include "c10/core/ScalarType.h"
+#include "c10/util/BigInteger.h"
 
 // A global boolean variable to control whether we free memory when a Tensor
 // is shrunk to a smaller size. As a result, a Tensor is always going to
@@ -55,12 +57,6 @@ class TensorBase;
 } // namespace at
 
 namespace c10 {
-
-#define DISPATCH_CASE(N) \
-case N: { \
-    data_type_ = caffe2::TypeMeta::Make<c10::BigInteger<N>>(); \
-    break; \
-}
 
 /**
  * A utility function to convert vector<int> to vector<int64_t>.
@@ -1698,9 +1694,13 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     return *curve_opt_;
   }
 
-  void to_curve(Curve curve_info, bool in_montspace) {
+  void to_curve(Curve curve_info, bool in_montgomary_space) {
     curve_opt_ = curve_info;
+    data_type_ = caffe2::TypeMeta::Make<c10::EllipticCurve>();
+    field_ = in_montgomary_space ? FieldType::Montgomery : FieldType::Base;
   }
+
+  c10::FieldType field() const { return field_; }
 
  protected:
   /**
@@ -2355,22 +2355,6 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     data_type_ = data_type;
   }
 
-
-
-  void make_BigInteger() {
-
-    auto sizes = sizes_and_strides_.sizes_arrayref();
-    switch(sizes[dim()-1]) {
-      GENERATE_CASES_UP_TO_MAX_BIGINT(DISPATCH_CASE)
-      default:
-        throw std::runtime_error("Invalid size of big integer");
-        break;
-    }
-
-    set_sizes_contiguous(sizes.slice(0, dim()-1));
-
-  }
-
   void empty_tensor_restride_symint(MemoryFormat memory_format);
 
   /**
@@ -2996,9 +2980,6 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     has_symbolic_sizes_strides_ = false;
   }
 
-  // Only for Field data type, return if the tensor is in Montgomary space
-  bool in_montgomary_space_ : 1;
-
   // Tensor is contiguous
   bool is_contiguous_ : 1;
 
@@ -3090,6 +3071,9 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
 
   // Store the curve information if the tensor stores elliptic curve datas 
   c10::optional<c10::Curve> curve_opt_;
+
+  // Only for Field data type, return if the tensor is in Montgomary space
+  c10::FieldType field_;
 
 
   // The set of DispatchKeys which describe this tensor.  NB: this

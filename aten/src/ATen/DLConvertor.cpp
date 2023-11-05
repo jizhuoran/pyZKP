@@ -74,39 +74,9 @@ DLDataType getDLDataType(const Tensor& t) {
       TORCH_CHECK(false, "NumOptions is not a valid ScalarType");
     case ScalarType::ULong:
     case ScalarType::Field64:
-    case ScalarType::InternalBigInteger:
-    case ScalarType::BigInteger1:
-    case ScalarType::BigInteger2:
-    case ScalarType::BigInteger3:
-    case ScalarType::BigInteger4:
-    case ScalarType::BigInteger5:
-    case ScalarType::BigInteger6:
-    case ScalarType::BigInteger7:
-    case ScalarType::BigInteger8:
-    case ScalarType::BigInteger9:
-    case ScalarType::BigInteger10:
-    case ScalarType::BigInteger11:
-    case ScalarType::BigInteger12:
-    case ScalarType::BigInteger13:
-    case ScalarType::BigInteger14:
-    case ScalarType::BigInteger15:
-    case ScalarType::BigInteger16:
-    case ScalarType::BigInteger17:
-    case ScalarType::BigInteger18:
-    case ScalarType::BigInteger19:
-    case ScalarType::BigInteger20:
-    case ScalarType::BigInteger21:
-    case ScalarType::BigInteger22:
-    case ScalarType::BigInteger23:
-    case ScalarType::BigInteger24:
-    case ScalarType::BigInteger25:
-    case ScalarType::BigInteger26:
-    case ScalarType::BigInteger27:
-    case ScalarType::BigInteger28:
-    case ScalarType::BigInteger29:
-    case ScalarType::BigInteger30:
-    case ScalarType::BigInteger31:
-    case ScalarType::BigInteger32:
+    case ScalarType::BigInteger:
+    case ScalarType::FiniteField:
+    case ScalarType::EllipticCurve:
       TORCH_CHECK(false, "Big interger types have not been supported by dlpack at the current stage");
       break;
   }

@@ -38,20 +38,20 @@ enum class CurveField : int8_t {
 struct C10_API Curve final {
 
   /// Constructs a new `Curve` from a `CurveFamily`
-  /* implicit */ Curve(CurveFamily curve_family, CurveGroup curve_group, CurveField curve_field) 
-  : curve_family_(curve_family), curve_group_(curve_group), curve_field_(curve_field) {}
+  /* implicit */ Curve(CurveFamily curve_family, CurveField curve_field, CurveGroup curve_group) 
+  : curve_family_(curve_family), curve_field_(curve_field), curve_group_(curve_group) {}
 
   /// Constructs a `Curve` from a string description, for convenience.
   /// The string supplied must follow the following schema:
   /// `(cpu|cuda)[:<device-index>]`
   /// where `cpu` or `cuda` specifies the device type, and
   /// `:<device-index>` optionally specifies a device index.
-  /* implicit */ Curve(const std::string& curve_family_string, const std::string& curve_group_string, const std::string& curve_field_string);
+  /* implicit */ Curve(const std::string& curve_family_string, const std::string& curve_field_string, const std::string& curve_group_string);
 
   /// Returns true if the type and index of this `Device` matches that of
   /// `other`.
   bool operator==(const Curve& other) const noexcept {
-    return this->curve_family_ == other.curve_family_ && this->curve_group_ == other.curve_group_ && this->curve_field_ == other.curve_field_;
+    return this->curve_family_ == other.curve_family_ && this->curve_field_ == other.curve_field_ && this->curve_group_ == other.curve_group_;
   }
 
   /// Returns true if the type or index of this `Device` differs from that of
@@ -65,14 +65,14 @@ struct C10_API Curve final {
     return curve_family_;
   }
 
-  /// Returns the group of curve this is.
-  CurveGroup curve_group() const noexcept {
-    return curve_group_;
-  }
-
   /// Returns the field of curve this is.
   CurveField curve_field() const noexcept {
     return curve_field_;
+  }
+  
+  /// Returns the group of curve this is.
+  CurveGroup curve_group() const noexcept {
+    return curve_group_;
   }
 
   /// Same string as returned from operator<<.
@@ -80,8 +80,8 @@ struct C10_API Curve final {
 
  private:
   CurveFamily curve_family_;
-  CurveGroup curve_group_;
   CurveField curve_field_;
+  CurveGroup curve_group_;
 };
 
 C10_API std::ostream& operator<<(std::ostream& stream, const Curve& device);

@@ -6,6 +6,7 @@
 
 #include <torch/csrc/Exceptions.h>
 #include <torch/csrc/utils/python_numbers.h>
+#include "c10/core/ScalarType.h"
 
 namespace torch {
 namespace utils {
@@ -82,24 +83,15 @@ inline void store_scalar(void* data, at::ScalarType scalarType, PyObject* obj) {
           at::convert<at::Float8_e4m3fn, double>(THPUtils_unpackDouble(obj));
       break;
     case at::kField64:
-    case at::kInternalBigInteger:
+    case at::kBigInteger:
+    case at::kFiniteField:
+    case at::kEllipticCurve:
       *(uint64_t*)data = THPUtils_unpackUInt64(obj);
       break;
     default:
       throw std::runtime_error("invalid type");
   }
 }
-
-#define PACK_CASE(N) \
-  case at::kBigInteger##N: { \
-    return THPUtils_packUInt64List((uint64_t*)data, N); \
-}
-
-
-
-
-// case at::kBigInteger3:
-//       return THPUtils_packUInt64List((uint64_t*)data, 3);
 
 inline PyObject* load_scalar(void* data, at::ScalarType scalarType) {
   switch (scalarType) {
@@ -145,9 +137,10 @@ inline PyObject* load_scalar(void* data, at::ScalarType scalarType) {
       return PyFloat_FromDouble(
           at::convert<double, at::Float8_e4m3fn>(*(at::Float8_e4m3fn*)data));
     case at::kField64:
-    case at::kInternalBigInteger:
+    case at::kBigInteger:
+    case at::kFiniteField:
+    case at::kEllipticCurve:
       return THPUtils_packUInt64(*(uint64_t*)data);
-    GENERATE_CASES_UP_TO_MAX_BIGINT(PACK_CASE);
     default:
       throw std::runtime_error("invalid type");
   }

@@ -101,8 +101,12 @@ std::string Dtype::ToCppString() const {
       return "quint8";
     case ScalarType::Field64:
       return "field64";
-    case ScalarType::InternalBigInteger:
+    case ScalarType::BigInteger:
       return "big_integer";
+    case ScalarType::FiniteField:
+      return "finite_field";
+    case ScalarType::EllipticCurve:
+      return "elliptic_curve";
     default:
       throw unsupported_dtype();
   }

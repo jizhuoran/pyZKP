@@ -998,6 +998,28 @@ static PyObject * THPVariable_to(PyObject* self, PyObject* args, PyObject* kwarg
   END_HANDLE_TH_ERRORS
 }
 
+
+
+static PyObject * THPVariable_field(PyObject* self, PyObject* args, PyObject* kwargs)
+{
+  HANDLE_TH_ERRORS
+  static PythonArgParser parser({
+    "field()",
+  });
+  auto& self_ = THPVariable_Unpack(self);
+  switch (self_.field()) {
+    case c10::FieldType::Base:
+      return PyUnicode_FromString("base space");
+    case c10::FieldType::Finite:
+      return PyUnicode_FromString("finite space");
+    case c10::FieldType::Montgomery:
+      return PyUnicode_FromString("Montgomery space");
+    default:
+      throw std::runtime_error("Unknown field");
+  }
+  END_HANDLE_TH_ERRORS
+}
+
 static PyObject * THPVariable_curve_info(PyObject* self, PyObject* args, PyObject* kwargs)
 {
   HANDLE_TH_ERRORS
@@ -1006,21 +1028,7 @@ static PyObject * THPVariable_curve_info(PyObject* self, PyObject* args, PyObjec
   });
   auto& self_ = THPVariable_Unpack(self);
   auto curve = self_.curve();
-  
-  return PyBytes_FromString(curve.str().c_str());
-
-  // if (curve) {
-  //   if (curve->curve_type_ == 0) {
-  //     return PyBytes_FromString("bn128");
-  //   } else if (curve->curve_type_ == 1) {
-  //     return PyBytes_FromString("bls12-381");
-  //   } else {
-  //     throw TypeError("Unknown curve type");
-  //   }
-  // } else {
-  //   return PyBytes_FromString("None");
-  // }
-  // Py_RETURN_NONE;
+  return PyUnicode_FromString(curve.str().c_str());
   END_HANDLE_TH_ERRORS
 }
 
@@ -1028,22 +1036,27 @@ static PyObject * THPVariable_to_curve(PyObject* self, PyObject* args, PyObject*
 {
   HANDLE_TH_ERRORS
   static PythonArgParser parser({
-    "to_curve(std::string curveType, std::string fieldType, std::string GType=\"G1\", bool to_mont=False)",
+    "to_curve(std::string family, std::string field, std::string group, bool already_in_mont=False, bool to_mont=False)",
   });
-  ParsedArgs<4> parsed_args;
+  ParsedArgs<5> parsed_args;
   auto r = parser.parse(self, args, kwargs, parsed_args);
   if (r.has_torch_function()) {
     return handle_torch_function(r, self, args, kwargs, THPVariableClass, "torch.Tensor");
   }
-  auto curveType = r.string(0);
-  auto fieldType = r.string(1);
-  auto GType = r.stringWithDefault(2, "G1");
-  auto doMont = r.toBoolWithDefault(3, false);
+  auto family = r.string(0);
+  auto field = r.string(1);
+  auto group = r.string(2);
+  auto alread_in_mont = r.toBoolWithDefault(3, false);
+  auto to_mont = r.toBoolWithDefault(4, false);
   auto& self_ = THPVariable_Unpack(self);
 
-  self_.to_curve(c10::Curve(curveType, GType, fieldType), doMont);
-
-  Py_RETURN_NONE;
+  self_.to_curve(c10::Curve(family, field, group), alread_in_mont);
+  if (!alread_in_mont && to_mont) {
+    // return THPVariable_Wrap(torch::utils::apply_(self_, arg));
+    // self_.to_mont();
+    return THPVariable_Wrap(self_);
+  }
+  return THPVariable_Wrap(self_);
   END_HANDLE_TH_ERRORS
 }
 // implemented on the python object b/c arbitrarily nested list not declarable in native_functions.yaml
@@ -1324,6 +1337,7 @@ PyMethodDef variable_methods[] = {
   {"type", castPyCFunctionWithKeywords(THPVariable_type), METH_VARARGS | METH_KEYWORDS, NULL},
   {"to_curve", castPyCFunctionWithKeywords(THPVariable_to_curve), METH_VARARGS | METH_KEYWORDS, NULL},
   {"curve_info", castPyCFunctionWithKeywords(THPVariable_curve_info), METH_VARARGS | METH_KEYWORDS, NULL},
+  {"field", castPyCFunctionWithKeywords(THPVariable_field), METH_VARARGS | METH_KEYWORDS, NULL},
   ${py_method_defs}
   {NULL}
 };

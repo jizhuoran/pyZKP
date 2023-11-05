@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <type_traits>
 #include "c10/util/BigInteger.h"
-#include "c10/util/Field64.h"
 
 C10_CLANG_DIAGNOSTIC_PUSH()
 #if C10_CLANG_HAS_WARNING("-Wimplicit-float-conversion")
@@ -128,7 +127,7 @@ struct static_cast_with_inter_type<
     uint64_t,
     c10::Field64> {
   C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply( c10::Field64 src) {
+  apply(c10::Field64 src) {
     return src.val_;
   }
 };
@@ -136,9 +135,29 @@ struct static_cast_with_inter_type<
 template <>
 struct static_cast_with_inter_type<
     uint64_t,
-    c10::InternalBigInteger> {
+    c10::BigInteger> {
   C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply( c10::InternalBigInteger src) {
+  apply( c10::BigInteger src) {
+    return src.val_;
+  }
+};
+
+template <>
+struct static_cast_with_inter_type<
+    uint64_t,
+    c10::FiniteField> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
+  apply(c10::FiniteField src) {
+    return src.val_;
+  }
+};
+
+template <>
+struct static_cast_with_inter_type<
+    uint64_t,
+    c10::EllipticCurve> {
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
+  apply(c10::EllipticCurve src) {
     return src.val_;
   }
 };

@@ -394,42 +394,12 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
   AT_DISPATCH_CASE(at::ScalarType::Long, __VA_ARGS__) \
   AT_DISPATCH_CASE(at::ScalarType::Short, __VA_ARGS__)
 
-#define AT_DISPATCH_CASE_FIELD_TYPES(...)          \
-  AT_DISPATCH_CASE(kULong, __VA_ARGS__)            \
-  AT_DISPATCH_CASE(kField64, __VA_ARGS__)          \
-  AT_DISPATCH_CASE(kInternalBigInteger, __VA_ARGS__)      \
-  AT_DISPATCH_CASE(kBigInteger1, __VA_ARGS__)      \
-  AT_DISPATCH_CASE(kBigInteger2, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger3, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger4, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger5, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger6, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger7, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger8, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger9, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger10, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger11, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger12, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger13, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger14, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger15, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger16, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger17, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger18, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger19, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger20, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger21, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger22, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger23, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger24, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger25, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger26, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger27, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger28, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger29, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger30, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger31, __VA_ARGS__)       \
-  AT_DISPATCH_CASE(kBigInteger32, __VA_ARGS__)
+#define AT_DISPATCH_CASE_FIELD_TYPES(...)         \
+  AT_DISPATCH_CASE(kULong, __VA_ARGS__)           \
+  AT_DISPATCH_CASE(kField64, __VA_ARGS__)         \
+  AT_DISPATCH_CASE(kBigInteger, __VA_ARGS__)      \
+  AT_DISPATCH_CASE(kFiniteField, __VA_ARGS__)     \
+  AT_DISPATCH_CASE(kEllipticCurve, __VA_ARGS__)   \
 
 #define AT_DISPATCH_INTEGRAL_TYPES(TYPE, NAME, ...) \
   AT_DISPATCH_SWITCH(TYPE, NAME, AT_DISPATCH_CASE_INTEGRAL_TYPES(__VA_ARGS__))
