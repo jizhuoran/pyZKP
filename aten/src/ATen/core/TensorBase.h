@@ -253,6 +253,7 @@ class TORCH_API TensorBase {
   }
 
   c10::FieldType field() const { return impl_->field(); }
+  void set_field(c10::FieldType field) { impl_->set_field(field); }
 
   // See impl::get_opt_names in ATen/NamedTensor.h for docs.
   c10::optional<DimnameList> opt_names() const {

@@ -1036,7 +1036,7 @@ static PyObject * THPVariable_to_curve(PyObject* self, PyObject* args, PyObject*
 {
   HANDLE_TH_ERRORS
   static PythonArgParser parser({
-    "to_curve(std::string family, std::string field, std::string group, bool already_in_mont=False, bool to_mont=False)",
+    "to_curve(std::string family, std::string field, std::string group, bool already_in_mont=False)",
   });
   ParsedArgs<5> parsed_args;
   auto r = parser.parse(self, args, kwargs, parsed_args);
@@ -1047,15 +1047,13 @@ static PyObject * THPVariable_to_curve(PyObject* self, PyObject* args, PyObject*
   auto field = r.string(1);
   auto group = r.string(2);
   auto alread_in_mont = r.toBoolWithDefault(3, false);
-  auto to_mont = r.toBoolWithDefault(4, false);
   auto& self_ = THPVariable_Unpack(self);
+  auto curve_info = c10::Curve(family, field, group);
 
-  self_.to_curve(c10::Curve(family, field, group), alread_in_mont);
-  if (!alread_in_mont && to_mont) {
-    // return THPVariable_Wrap(torch::utils::apply_(self_, arg));
-    // self_.to_mont();
-    return THPVariable_Wrap(self_);
+  if (curve_info.expected_last_dim() != self_.size(self_.dim()-1)) {
+    throw std::runtime_error("The last dimension of the tensor does not match the expected dimension of the curve");
   }
+  self_.to_curve(curve_info, alread_in_mont);
   return THPVariable_Wrap(self_);
   END_HANDLE_TH_ERRORS
 }

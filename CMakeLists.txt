@@ -20,7 +20,7 @@ cmake_policy(SET CMP0069 NEW)
 cmake_policy(SET CMP0092 NEW)
 
 # ---[ Project and semantic versioning.
-project(Torch CXX C)
+project(Torch CXX C ASM)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(LINUX TRUE)

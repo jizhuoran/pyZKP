@@ -856,6 +856,7 @@ void TensorImpl::copy_generic_tensor_metadata(
   dest_impl->storage_offset_ = src_impl->storage_offset_;
   dest_impl->data_type_ = src_impl->data_type_;
   dest_impl->device_opt_ = src_impl->device_opt_;
+  dest_impl->curve_opt_ = src_impl->curve_opt_;
   dest_impl->is_contiguous_ = src_impl->is_contiguous_;
   dest_impl->is_channels_last_contiguous_ =
       src_impl->is_channels_last_contiguous_;

@@ -355,6 +355,12 @@ static inline bool isQIntType(ScalarType t) {
       t == ScalarType::QUInt2x4;
 }
 
+static inline bool isBigIntegerType(ScalarType t) {
+  // Don't forget to extend this when adding new BigInteger types
+  return t == ScalarType::Field64 || t == ScalarType::BigInteger ||
+      t == ScalarType::FiniteField || t == ScalarType::EllipticCurve;
+}
+
 static inline bool isBitsType(ScalarType t) {
   return t == ScalarType::Bits1x8 || t == ScalarType::Bits2x4 ||
       t == ScalarType::Bits4x2 || t == ScalarType::Bits8 ||

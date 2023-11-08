@@ -1,5 +1,6 @@
 #pragma once
 
+#include <_types/_uint8_t.h>
 #include <c10/macros/Export.h>
 #include <c10/util/Exception.h>
 
@@ -11,15 +12,11 @@
 namespace c10 {
 
 enum class CurveFamily : int8_t {
-  NOT_CURVE = 0,
-  BN254 = 1,
+  BN254 = 0,
+  ALT_BN128 = 1,
   BLS12_377 = 2,
   BLS12_381 = 3,
   MNT4753 = 4,
-  // NB: If you add more curves:
-  //  - Change the implementations of DeviceTypeName and isValidDeviceType
-  //    in Curve.cpp
-  //  - Change the number below
   COMPILE_TIME_MAX_CURVE_FAMILY_TYPES = 5,
 };
 
@@ -33,6 +30,31 @@ enum class CurveField : int8_t {
   Fr = 0,
   Fq = 1,
   COMPILE_TIME_MAX_CURVE_FIELD_TYPES = 2,
+};
+
+enum class CurveType : int8_t {
+  NOT_CURVE = 0,
+  BN254_Fr_G1 = 1,
+  BN254_Fr_G2 = 2,
+  BN254_Fq_G1 = 3,
+  BN254_Fq_G2 = 4,
+  ALT_BN128_Fr_G1 = 5,
+  ALT_BN128_Fr_G2 = 6,
+  ALT_BN128_Fq_G1 = 7,
+  ALT_BN128_Fq_G2 = 8,
+  BLS12_377_Fr_G1 = 9,
+  BLS12_377_Fr_G2 = 10,
+  BLS12_377_Fq_G1 = 11,
+  BLS12_377_Fq_G2 = 12,
+  BLS12_381_Fr_G1 = 13,
+  BLS12_381_Fr_G2 = 14,
+  BLS12_381_Fq_G1 = 15,
+  BLS12_381_Fq_G2 = 16,
+  MNT4753_Fr_G1 = 17,
+  MNT4753_Fr_G2 = 18,
+  MNT4753_Fq_G1 = 19,
+  MNT4753_Fq_G2 = 20,
+  COMPILE_TIME_MAX_CURVE_TYPES = 21,
 };
 
 struct C10_API Curve final {
@@ -73,6 +95,37 @@ struct C10_API Curve final {
   /// Returns the group of curve this is.
   CurveGroup curve_group() const noexcept {
     return curve_group_;
+  }
+
+  CurveType type() const noexcept {
+    return static_cast<CurveType>(static_cast<int8_t>(curve_family_) * static_cast<int8_t>(CurveField::COMPILE_TIME_MAX_CURVE_FIELD_TYPES) * static_cast<int8_t>(CurveGroup::COMPILE_TIME_MAX_CURVE_GROUP_TYPES) + static_cast<int8_t>(curve_field_) * static_cast<int8_t>(CurveGroup::COMPILE_TIME_MAX_CURVE_GROUP_TYPES) + static_cast<int8_t>(curve_group_) + 1);
+  }
+
+  uint8_t expected_last_dim() const noexcept {
+    switch (type()) {
+      case CurveType::BN254_Fr_G1 : return 4;
+      case CurveType::BN254_Fr_G2 : return 4;
+      case CurveType::BN254_Fq_G1 : return 4;
+      case CurveType::BN254_Fq_G2 : return 4;
+      case CurveType::ALT_BN128_Fr_G1 : return 4;
+      case CurveType::ALT_BN128_Fr_G2 : return 4;
+      case CurveType::ALT_BN128_Fq_G1 : return 4;
+      case CurveType::ALT_BN128_Fq_G2 : return 4;
+      case CurveType::BLS12_377_Fr_G1 : return 4;
+      case CurveType::BLS12_377_Fr_G2 : return 4;
+      case CurveType::BLS12_377_Fq_G1 : return 6;
+      case CurveType::BLS12_377_Fq_G2 : return 6;
+      case CurveType::BLS12_381_Fr_G1 : return 4;
+      case CurveType::BLS12_381_Fr_G2 : return 4;
+      case CurveType::BLS12_381_Fq_G1 : return 6;
+      case CurveType::BLS12_381_Fq_G2 : return 6;
+      case CurveType::MNT4753_Fr_G1 : return 12;
+      case CurveType::MNT4753_Fr_G2 : return 12;
+      case CurveType::MNT4753_Fq_G1 : return 12;
+      case CurveType::MNT4753_Fq_G2 : return 12;
+      default:
+        TORCH_CHECK(false, "Unsupported curve group");
+    }
   }
 
   /// Same string as returned from operator<<.

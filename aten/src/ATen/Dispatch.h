@@ -394,19 +394,28 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
   AT_DISPATCH_CASE(at::ScalarType::Long, __VA_ARGS__) \
   AT_DISPATCH_CASE(at::ScalarType::Short, __VA_ARGS__)
 
-#define AT_DISPATCH_CASE_FIELD_TYPES(...)         \
-  AT_DISPATCH_CASE(kULong, __VA_ARGS__)           \
-  AT_DISPATCH_CASE(kField64, __VA_ARGS__)         \
-  AT_DISPATCH_CASE(kBigInteger, __VA_ARGS__)      \
-  AT_DISPATCH_CASE(kFiniteField, __VA_ARGS__)     \
-  AT_DISPATCH_CASE(kEllipticCurve, __VA_ARGS__)   \
-
 #define AT_DISPATCH_INTEGRAL_TYPES(TYPE, NAME, ...) \
   AT_DISPATCH_SWITCH(TYPE, NAME, AT_DISPATCH_CASE_INTEGRAL_TYPES(__VA_ARGS__))
 
 #define AT_DISPATCH_CASE_INTEGRAL_TYPES_AND(SCALARTYPE, ...) \
   AT_DISPATCH_CASE_INTEGRAL_TYPES(__VA_ARGS__)               \
   AT_DISPATCH_CASE(SCALARTYPE, __VA_ARGS__)
+
+#define AT_DISPATCH_CASE_BIGINTEGER_TYPES(...)    \
+  AT_DISPATCH_CASE(kULong, __VA_ARGS__)           \
+  AT_DISPATCH_CASE(kField64, __VA_ARGS__)         \
+  AT_DISPATCH_CASE(kBigInteger, __VA_ARGS__)      \
+  AT_DISPATCH_CASE(kFiniteField, __VA_ARGS__)     \
+  AT_DISPATCH_CASE(kEllipticCurve, __VA_ARGS__)
+
+#define AT_DISPATCH_BIGINTEGER_TYPES(TYPE, NAME, ...)  \
+  AT_DISPATCH_SWITCH(TYPE, NAME, AT_DISPATCH_CASE_BIGINTEGER_TYPES(__VA_ARGS__))
+
+#define AT_DISPATCH_CASE_CURVE_TYPES(...)         \
+  AT_DISPATCH_CASE(kEllipticCurve, __VA_ARGS__)
+
+#define AT_DISPATCH_CURVE_TYPES(TYPE, NAME, ...)  \
+  AT_DISPATCH_SWITCH(TYPE, NAME, AT_DISPATCH_CASE_CURVE_TYPES(__VA_ARGS__))
 
 #define AT_DISPATCH_INTEGRAL_TYPES_AND(SCALARTYPE, TYPE, NAME, ...) \
   AT_DISPATCH_SWITCH(                                               \
@@ -636,7 +645,7 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
     SCALARTYPE4,                                                \
     ...)                                                        \
   AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX(__VA_ARGS__)           \
-  AT_DISPATCH_CASE_FIELD_TYPES(__VA_ARGS__)                     \
+  AT_DISPATCH_CASE_BIGINTEGER_TYPES(__VA_ARGS__)                \
   AT_DISPATCH_CASE(SCALARTYPE1, __VA_ARGS__)                    \
   AT_DISPATCH_CASE(SCALARTYPE2, __VA_ARGS__)                    \
   AT_DISPATCH_CASE(SCALARTYPE3, __VA_ARGS__)                    \
@@ -660,6 +669,41 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
           SCALARTYPE4,                                          \
           __VA_ARGS__))
 
+#define AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX_AND_FIELD_AND5(  \
+    SCALARTYPE1,                                                \
+    SCALARTYPE2,                                                \
+    SCALARTYPE3,                                                \
+    SCALARTYPE4,                                                \
+    SCALARTYPE5,                                                \
+    ...)                                                        \
+  AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX(__VA_ARGS__)           \
+  AT_DISPATCH_CASE_BIGINTEGER_TYPES(__VA_ARGS__)                \
+  AT_DISPATCH_CASE(SCALARTYPE1, __VA_ARGS__)                    \
+  AT_DISPATCH_CASE(SCALARTYPE2, __VA_ARGS__)                    \
+  AT_DISPATCH_CASE(SCALARTYPE3, __VA_ARGS__)                    \
+  AT_DISPATCH_CASE(SCALARTYPE4, __VA_ARGS__)                    \
+  AT_DISPATCH_CASE(SCALARTYPE5, __VA_ARGS__)
+
+#define AT_DISPATCH_ALL_TYPES_AND_COMPLEX_AND_FIELD_AND5(       \
+    SCALARTYPE1,                                                \
+    SCALARTYPE2,                                                \
+    SCALARTYPE3,                                                \
+    SCALARTYPE4,                                                \
+    SCALARTYPE5,                                                \
+    TYPE,                                                       \
+    NAME,                                                       \
+    ...)                                                        \
+  AT_DISPATCH_SWITCH(                                           \
+      TYPE,                                                     \
+      NAME,                                                     \
+      AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX_AND_FIELD_AND5(    \
+          SCALARTYPE1,                                          \
+          SCALARTYPE2,                                          \
+          SCALARTYPE3,                                          \
+          SCALARTYPE4,                                          \
+          SCALARTYPE5,                                          \
+          __VA_ARGS__))
+
 #define AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX_AND_FIELD_AND6(  \
     SCALARTYPE1,                                                \
     SCALARTYPE2,                                                \
@@ -669,7 +713,7 @@ inline void deprecated_AT_DISPATCH_ALL_TYPES_AND_HALF_AND_COMPLEX() {}
     SCALARTYPE6,                                                \
     ...)                                                        \
   AT_DISPATCH_CASE_ALL_TYPES_AND_COMPLEX(__VA_ARGS__)           \
-  AT_DISPATCH_CASE_FIELD_TYPES(__VA_ARGS__)                     \
+  AT_DISPATCH_CASE_BIGINTEGER_TYPES(__VA_ARGS__)                \
   AT_DISPATCH_CASE(SCALARTYPE1, __VA_ARGS__)                    \
   AT_DISPATCH_CASE(SCALARTYPE2, __VA_ARGS__)                    \
   AT_DISPATCH_CASE(SCALARTYPE3, __VA_ARGS__)                    \

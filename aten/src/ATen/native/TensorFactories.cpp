@@ -1710,6 +1710,11 @@ Tensor clone(const Tensor& src, c10::optional<c10::MemoryFormat> optional_memory
   } else {
     self.copy_(src);
   }
+
+  if(src.options().dtype() == at::kEllipticCurve) {
+    self.to_curve(src.curve(), src.field() == FieldType::Montgomery);
+  }
+
   return self;
 }
 

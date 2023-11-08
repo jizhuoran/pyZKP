@@ -5453,3 +5453,24 @@ def multi_head_attention_forward(
             # squeeze the output if input was unbatched
             attn_output = attn_output.squeeze(1)
         return attn_output, None
+
+# Below are for BigInteger
+def to_mont(input: Tensor, inplace: bool = False) -> Tensor:
+    r"""
+        Convert input to Montgomery domain. Only for Elliptic Curve.
+    """
+    if inplace:
+        result = torch.to_mont_(input)
+    else:
+        result = torch.to_mont(input)
+    return result
+
+def to_base(input: Tensor, inplace: bool = False) -> Tensor:
+    r"""
+        Convert input to base domain. Only for Elliptic Curve.
+    """
+    if inplace:
+        result = torch.to_base_(input)
+    else:
+        result = torch.to_base(input)
+    return result

@@ -1369,6 +1369,10 @@ std::vector<Shape> compute_shape_as_strided_scatter_symint(
   return {Shape(out_meta.scalar_type(), out_meta.sizes().vec())};
 }
 
+std::vector<Shape> compute_shape_to_mont(const at::Tensor& self) {
+  return {Shape(self.scalar_type(), self.sizes().vec())};
+}
+
 // Restore unused-parameters warnings
 #pragma GCC diagnostic pop
 

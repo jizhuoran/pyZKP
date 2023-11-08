@@ -203,7 +203,15 @@ void direct_copy_kernel(TensorIteratorBase &iter) {
     });
   } else if (dtype == ScalarType::ComplexHalf) {
     cpu_kernel(iter, [=](c10::complex<at::Half> a) -> c10::complex<at::Half> { return a; });
-  } else {
+  } else if (isBigIntegerType(dtype)) {
+    AT_DISPATCH_BIGINTEGER_TYPES(dtype, "copy_kernel", [&] {
+      cpu_kernel_vec(
+          iter,
+          [=](scalar_t a) -> scalar_t { return a; },
+          [=](Vectorized<scalar_t> a) -> Vectorized<scalar_t> { return a; });
+    });
+  } 
+  else {
     _AT_DISPATCH_ALL_TYPES_NO_CF(dtype, "copy_kernel", [&] {
       cpu_kernel_vec(
           iter,

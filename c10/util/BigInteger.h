@@ -17,6 +17,7 @@ struct alignas(8) Field64 {
   uint64_t val_;
   Field64() = default;
   C10_HOST_DEVICE explicit Field64(uint64_t val) : val_(val) {}
+  operator uint64_t() const { return val_; }
 };
 
 struct alignas(8) BigInteger {
@@ -24,6 +25,7 @@ struct alignas(8) BigInteger {
   uint64_t val_;
   BigInteger() = default;
   C10_HOST_DEVICE explicit BigInteger(uint64_t val) : val_(val) {}
+  operator uint64_t() const { return val_; }
 };
 
 struct alignas(8) FiniteField {
@@ -31,6 +33,7 @@ struct alignas(8) FiniteField {
   uint64_t val_;
   FiniteField() = default;
   C10_HOST_DEVICE explicit FiniteField(uint64_t val) : val_(val) {}
+  operator uint64_t() const { return val_; }
 };
 
 struct alignas(8) EllipticCurve {
@@ -38,6 +41,7 @@ struct alignas(8) EllipticCurve {
   uint64_t val_;
   EllipticCurve() = default;
   C10_HOST_DEVICE explicit EllipticCurve(uint64_t val) : val_(val) {}
+  operator uint64_t() const { return val_; }
 };
 
 template <typename T>

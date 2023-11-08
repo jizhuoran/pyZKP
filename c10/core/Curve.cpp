@@ -16,6 +16,8 @@ std::string CurveFamilyName(CurveFamily d, bool lower_case) {
     // on the fly, but this seemed a bit much.
     case CurveFamily::BN254:
       return lower_case ? "bn254" : "BN254";
+    case CurveFamily::ALT_BN128:
+      return lower_case ? "alt-bn128" : "ALT-BN128";
     case CurveFamily::BLS12_377:
       return lower_case ? "bls12-377" : "BLS12-377";
     case CurveFamily::BLS12_381:
@@ -87,6 +89,7 @@ CurveFamily parse_curve_family_type(const std::string& curve_family_string) {
       static_cast<size_t>(CurveFamily::COMPILE_TIME_MAX_CURVE_FAMILY_TYPES)>
       types = {{
           {"bn254", CurveFamily::BN254},
+          {"alt-bn128", CurveFamily::ALT_BN128},
           {"bls12-377", CurveFamily::BLS12_377},
           {"bls12-381", CurveFamily::BLS12_381},
           {"mnt4753", CurveFamily::MNT4753},

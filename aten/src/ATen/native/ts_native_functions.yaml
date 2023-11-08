@@ -168,6 +168,8 @@ full_codegen:
   - slice_scatter
   - diagonal_scatter
   - as_strided_scatter
+  # Below are for ZKP and BigInteger
+  - to_mont
 ir_gen:
   - selu
 supported:

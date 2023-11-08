@@ -1701,6 +1701,7 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
   }
 
   c10::FieldType field() const { return field_; }
+  void set_field(c10::FieldType field) { field_ = field; }
 
  protected:
   /**

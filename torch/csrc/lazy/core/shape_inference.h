@@ -117,6 +117,10 @@ TORCH_API std::vector<torch::lazy::Shape> compute_shape_select_scatter(const at:
 TORCH_API std::vector<torch::lazy::Shape> compute_shape_diagonal_scatter(const at::Tensor & self, const at::Tensor & src, int64_t offset, int64_t dim1, int64_t dim2);
 TORCH_API std::vector<torch::lazy::Shape> compute_shape_slice_scatter_symint(const at::Tensor & self, const at::Tensor & src, int64_t dim, c10::optional<c10::SymInt> start, c10::optional<c10::SymInt> end, c10::SymInt step);
 TORCH_API std::vector<torch::lazy::Shape> compute_shape_as_strided_scatter_symint(const at::Tensor & self, const at::Tensor & src, c10::SymIntArrayRef size, c10::SymIntArrayRef stride, c10::optional<c10::SymInt> storage_offset);
+
+//BigInteger ops
+TORCH_API std::vector<torch::lazy::Shape> compute_shape_to_mont(const at::Tensor & self);
+
 // clang-format on
 } // namespace lazy
 } // namespace torch
