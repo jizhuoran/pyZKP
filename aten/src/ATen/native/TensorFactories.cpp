@@ -421,6 +421,10 @@ Tensor empty_like(
     namedinference::propagate_names(result, self.names());
   }
 
+  if(self.options().dtype() == at::kEllipticCurve) {
+    result.to_curve(self.curve(), self.field() == FieldType::Montgomery);
+  }
+
   // never propagate Conjugate, Negative, and ZeroTensor dispatch key
   result._set_conj(false);
   result._set_neg(false);

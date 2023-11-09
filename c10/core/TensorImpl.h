@@ -1685,13 +1685,7 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
   * The curve info of a Tensor if any
   */
   Curve curve() const {
-    // TODO: A useful internal assert would be to show that curve_opt_ is null
-    // if it is not a curve tensor.
-    TORCH_CHECK(
-        curve_opt_.has_value(),
-        "curve cannot be run on undefined Tensor");
-    // See NOTE [c10::optional operator usage in CUDA]
-    return *curve_opt_;
+    return curve_opt_;
   }
 
   void to_curve(Curve curve_info, bool in_montgomary_space) {
@@ -3071,7 +3065,7 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
   bool python_custom_layout_ : 1;
 
   // Store the curve information if the tensor stores elliptic curve datas 
-  c10::optional<c10::Curve> curve_opt_;
+  c10::Curve curve_opt_;
 
   // Only for Field data type, return if the tensor is in Montgomary space
   c10::FieldType field_;

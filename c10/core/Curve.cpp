@@ -86,7 +86,7 @@ namespace {
 CurveFamily parse_curve_family_type(const std::string& curve_family_string) {
   static const std::array<
       std::pair<const char*, CurveFamily>,
-      static_cast<size_t>(CurveFamily::COMPILE_TIME_MAX_CURVE_FAMILY_TYPES)>
+      static_cast<size_t>(CurveFamily::MAX_FAMILY)>
       types = {{
           {"bn254", CurveFamily::BN254},
           {"alt-bn128", CurveFamily::ALT_BN128},
@@ -120,7 +120,7 @@ CurveFamily parse_curve_family_type(const std::string& curve_family_string) {
 CurveField parse_curve_field_type(const std::string& curve_field_string) {
   static const std::array<
       std::pair<const char*, CurveField>,
-      static_cast<size_t>(CurveField::COMPILE_TIME_MAX_CURVE_FIELD_TYPES)>
+      static_cast<size_t>(CurveField::MAX_FIELD)>
       types = {{
           {"fr", CurveField::Fr},
           {"fq", CurveField::Fq},
@@ -151,7 +151,7 @@ CurveField parse_curve_field_type(const std::string& curve_field_string) {
 CurveGroup parse_curve_group_type(const std::string& curve_group_string) {
   static const std::array<
       std::pair<const char*, CurveGroup>,
-      static_cast<size_t>(CurveGroup::COMPILE_TIME_MAX_CURVE_GROUP_TYPES)>
+      static_cast<size_t>(CurveGroup::MAX_GROUP)>
       types = {{
           {"g1", CurveGroup::G1},
           {"g2", CurveGroup::G2},
@@ -183,11 +183,17 @@ CurveGroup parse_curve_group_type(const std::string& curve_group_string) {
 
 Curve::Curve(const std::string& curve_family_string, const std::string& curve_field_string, const std::string& curve_group_string) {
   TORCH_CHECK(!curve_family_string.empty(), "Curve family string must not be empty");
-  curve_family_ = parse_curve_family_type(curve_family_string);
+  auto curve_family_ = parse_curve_family_type(curve_family_string);
   TORCH_CHECK(!curve_field_string.empty(), "Curve field string must not be empty");
-  curve_field_ = parse_curve_field_type(curve_field_string);
+  auto curve_field_ = parse_curve_field_type(curve_field_string);
   TORCH_CHECK(!curve_group_string.empty(), "Curve group string must not be empty");
-  curve_group_ = parse_curve_group_type(curve_group_string);
+  auto curve_group_ = parse_curve_group_type(curve_group_string);
+
+  curve_type_ = static_cast<CurveType>(
+      static_cast<int8_t>(curve_family_) * static_cast<int8_t>(CurveField::MAX_FIELD) * static_cast<int8_t>(CurveGroup::MAX_GROUP) +
+      static_cast<int8_t>(curve_field_) * static_cast<int8_t>(CurveGroup::MAX_GROUP) +
+      static_cast<int8_t>(curve_group_) + 1);
+
 }
 
 std::string Curve::str() const {

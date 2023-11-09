@@ -856,7 +856,6 @@ void TensorImpl::copy_generic_tensor_metadata(
   dest_impl->storage_offset_ = src_impl->storage_offset_;
   dest_impl->data_type_ = src_impl->data_type_;
   dest_impl->device_opt_ = src_impl->device_opt_;
-  dest_impl->curve_opt_ = src_impl->curve_opt_;
   dest_impl->is_contiguous_ = src_impl->is_contiguous_;
   dest_impl->is_channels_last_contiguous_ =
       src_impl->is_channels_last_contiguous_;
@@ -871,6 +870,9 @@ void TensorImpl::copy_generic_tensor_metadata(
   if (src_impl->extra_meta_ != nullptr) {
     dest_impl->extra_meta_ = src_impl->extra_meta_->clone();
   }
+
+  dest_impl->field_ = src_impl->field_;
+  dest_impl->curve_opt_ = src_impl->curve_opt_;
 
   // NB: symbolic sizes and strides are copied as is custom policy, but python
   // policy is NOT (you have no Python object to dispatch to!)

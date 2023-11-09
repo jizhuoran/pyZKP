@@ -15,6 +15,11 @@ z = F.to_base(y)
 print(z)
 
 
+a = y.clone()
+print(a.curve_info())
+print(a.field())
+
+
 
 
 # y = torch.tensor([[9223372036854772, 2, 3, 10], [4, 5, 6, 8], [4, 5, 6, 8]], dtype=torch.big_integer)

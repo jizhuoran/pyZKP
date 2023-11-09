@@ -92,6 +92,8 @@ DECLARE_DISPATCH(unary_fn, special_scaled_modified_bessel_k0_stub);
 DECLARE_DISPATCH(unary_fn, special_scaled_modified_bessel_k1_stub);
 DECLARE_DISPATCH(unary_fn, special_spherical_bessel_j0_stub);
 
+DECLARE_DISPATCH(unary_fn, to_mont1_stub);
+
 // NB: these are actually defined in Distribution
 DECLARE_DISPATCH(void(*)(const TensorBase&, const TensorBase&, c10::optional<Generator>), bernoulli_tensor_stub);
 DECLARE_DISPATCH(void(*)(const TensorBase&, const double, c10::optional<Generator>), bernoulli_scalar_stub);

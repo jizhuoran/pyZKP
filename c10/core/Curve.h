@@ -17,19 +17,19 @@ enum class CurveFamily : int8_t {
   BLS12_377 = 2,
   BLS12_381 = 3,
   MNT4753 = 4,
-  COMPILE_TIME_MAX_CURVE_FAMILY_TYPES = 5,
-};
-
-enum class CurveGroup : int8_t {
-  G1 = 0,
-  G2 = 1,
-  COMPILE_TIME_MAX_CURVE_GROUP_TYPES = 2,
+  MAX_FAMILY = 5,
 };
 
 enum class CurveField : int8_t {
   Fr = 0,
   Fq = 1,
-  COMPILE_TIME_MAX_CURVE_FIELD_TYPES = 2,
+  MAX_FIELD = 2,
+};
+
+enum class CurveGroup : int8_t {
+  G1 = 0,
+  G2 = 1,
+  MAX_GROUP = 2,
 };
 
 enum class CurveType : int8_t {
@@ -54,14 +54,15 @@ enum class CurveType : int8_t {
   MNT4753_Fr_G2 = 18,
   MNT4753_Fq_G1 = 19,
   MNT4753_Fq_G2 = 20,
-  COMPILE_TIME_MAX_CURVE_TYPES = 21,
+  MAX_CURVE_TYPES = 21,
 };
 
 struct C10_API Curve final {
 
+  Curve() : curve_type_(CurveType::NOT_CURVE) {}
+
   /// Constructs a new `Curve` from a `CurveFamily`
-  /* implicit */ Curve(CurveFamily curve_family, CurveField curve_field, CurveGroup curve_group) 
-  : curve_family_(curve_family), curve_field_(curve_field), curve_group_(curve_group) {}
+  /* implicit */ Curve(CurveType curve_type) : curve_type_(curve_type) {}
 
   /// Constructs a `Curve` from a string description, for convenience.
   /// The string supplied must follow the following schema:
@@ -73,7 +74,7 @@ struct C10_API Curve final {
   /// Returns true if the type and index of this `Device` matches that of
   /// `other`.
   bool operator==(const Curve& other) const noexcept {
-    return this->curve_family_ == other.curve_family_ && this->curve_field_ == other.curve_field_ && this->curve_group_ == other.curve_group_;
+    return this->curve_type_ == other.curve_type_;
   }
 
   /// Returns true if the type or index of this `Device` differs from that of
@@ -84,21 +85,25 @@ struct C10_API Curve final {
 
   /// Returns the family of curve this is.
   CurveFamily curve_family() const noexcept {
-    return curve_family_;
-  }
-
-  /// Returns the field of curve this is.
-  CurveField curve_field() const noexcept {
-    return curve_field_;
+    return static_cast<CurveFamily>(
+      (static_cast<int8_t>(curve_type_) - 1) / static_cast<int8_t>(CurveField::MAX_FIELD) / static_cast<int8_t>(CurveGroup::MAX_GROUP) % static_cast<int8_t>(CurveFamily::MAX_FAMILY)
+    );
   }
   
+  /// Returns the field of curve this is.
+  CurveField curve_field() const noexcept {
+    return static_cast<CurveField>(
+      (static_cast<int8_t>(curve_type_) - 1) / static_cast<int8_t>(CurveGroup::MAX_GROUP) % static_cast<int8_t>(CurveField::MAX_FIELD)
+    );
+  }
+
   /// Returns the group of curve this is.
   CurveGroup curve_group() const noexcept {
-    return curve_group_;
+    return static_cast<CurveGroup>((static_cast<int8_t>(curve_type_) - 1) % static_cast<int8_t>(CurveGroup::MAX_GROUP));
   }
 
   CurveType type() const noexcept {
-    return static_cast<CurveType>(static_cast<int8_t>(curve_family_) * static_cast<int8_t>(CurveField::COMPILE_TIME_MAX_CURVE_FIELD_TYPES) * static_cast<int8_t>(CurveGroup::COMPILE_TIME_MAX_CURVE_GROUP_TYPES) + static_cast<int8_t>(curve_field_) * static_cast<int8_t>(CurveGroup::COMPILE_TIME_MAX_CURVE_GROUP_TYPES) + static_cast<int8_t>(curve_group_) + 1);
+    return curve_type_;
   }
 
   uint8_t expected_last_dim() const noexcept {
@@ -124,17 +129,15 @@ struct C10_API Curve final {
       case CurveType::MNT4753_Fq_G1 : return 12;
       case CurveType::MNT4753_Fq_G2 : return 12;
       default:
-        TORCH_CHECK(false, "Unsupported curve group");
+        TORCH_CHECK(false, "Unsupported curve family, field, and group");
     }
   }
 
   /// Same string as returned from operator<<.
   std::string str() const;
 
- private:
-  CurveFamily curve_family_;
-  CurveField curve_field_;
-  CurveGroup curve_group_;
+  private:
+    CurveType curve_type_;
 };
 
 C10_API std::ostream& operator<<(std::ostream& stream, const Curve& device);
