@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ATen/native/biginteger/CurveImpl.h"
 # include "mont_t.cuh"
 
 namespace at { 
@@ -26,14 +25,14 @@ static __device__ __constant__ __align__(16) const uint32_t ALT_BN128_Px4[8] = {
 };
 static __device__ __constant__ const uint32_t ALT_BN128_M0 = 0xe4866389;
 
-typedef mont_t<254, device::ALT_BN128_P, device::ALT_BN128_M0,
-                    device::ALT_BN128_RR, device::ALT_BN128_one,
-                    device::ALT_BN128_Px4> alt_bn128_fq_mont;
+typedef mont_t<254, ALT_BN128_P, ALT_BN128_M0,
+                    ALT_BN128_RR, ALT_BN128_one,
+                    ALT_BN128_Px4> alt_bn128_fq_mont;
 
-struct BLS12_377_Fq_G1 : public alt_bn128_fq_mont {
-    using mem_t = BLS12_377_Fq_G1;
-    __device__ __forceinline__ BLS12_377_Fq_G1() {}
-    __device__ __forceinline__ BLS12_377_Fq_G1(const alt_bn128_fq_mont& a) : alt_bn128_fq_mont(a) {}
+struct ALT_BN128_Fq_G1 : public alt_bn128_fq_mont {
+    using mem_t = ALT_BN128_Fq_G1;
+    __device__ __forceinline__ ALT_BN128_Fq_G1() {}
+    __device__ __forceinline__ ALT_BN128_Fq_G1(const alt_bn128_fq_mont& a) : alt_bn128_fq_mont(a) {}
 };
 
 
@@ -56,13 +55,13 @@ static __device__ __constant__ __align__(16) const uint32_t ALT_BN128_rx4[8] = {
 static __device__ __constant__ const uint32_t ALT_BN128_m0 = 0xefffffff;
 
 
-typedef mont_t<254, device::ALT_BN128_r, device::ALT_BN128_m0,
-                    device::ALT_BN128_rRR, device::ALT_BN128_rone,
-                    device::ALT_BN128_rx4> alt_bn128_fr_mont;
-struct BLS12_377_Fr_G1 : public alt_bn128_fr_mont {
-    using mem_t = BLS12_377_Fr_G1;
-    __device__ __forceinline__ BLS12_377_Fr_G1() {}
-    __device__ __forceinline__ BLS12_377_Fr_G1(const alt_bn128_fr_mont& a) : alt_bn128_fr_mont(a) {}
+typedef mont_t<254, ALT_BN128_r, ALT_BN128_m0,
+                    ALT_BN128_rRR, ALT_BN128_rone,
+                    ALT_BN128_rx4> alt_bn128_fr_mont;
+struct ALT_BN128_Fr_G1 : public alt_bn128_fr_mont {
+    using mem_t = ALT_BN128_Fr_G1;
+    __device__ __forceinline__ ALT_BN128_Fr_G1() {}
+    __device__ __forceinline__ ALT_BN128_Fr_G1(const alt_bn128_fr_mont& a) : alt_bn128_fr_mont(a) {}
 };
 
 

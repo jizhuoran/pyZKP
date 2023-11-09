@@ -7,6 +7,7 @@
 #include <ATen/ops/copy.h>
 
 #include <ATen/cuda/CUDAContext.h>
+#include <ATen/native/cuda/thread_constants.h>
 
 #include <ATen/native/biginteger/CurveDispatch.h>
 
@@ -28,6 +29,14 @@ __global__ void to_mont_kernel(const int64_t N, T* data) {
 }
 
 template <typename T>
+__global__ void to_base_kernel(const int64_t N, T* data) {
+  int64_t i = blockIdx.x * blockDim.x + threadIdx.x;
+  if(i < N) {
+    data[i].from();
+  }
+}
+
+template <typename T>
 static void to_mont(c10::EllipticCurve* self, const int64_t num) {
   auto self_ptr = reinterpret_cast<T*>(self);
   int64_t N = num / (sizeof(T)/sizeof(c10::EllipticCurve));
@@ -35,6 +44,17 @@ static void to_mont(c10::EllipticCurve* self, const int64_t num) {
   int64_t grid = (N + block_work_size() - 1) / block_work_size();
   auto stream = at::cuda::getCurrentCUDAStream();
   to_mont_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+}
+
+template <typename T>
+static void to_base(c10::EllipticCurve* self, const int64_t num) {
+  auto self_ptr = reinterpret_cast<T*>(self);
+  int64_t N = num / (sizeof(T)/sizeof(c10::EllipticCurve));
+  TORCH_INTERNAL_ASSERT(N > 0 && N <= std::numeric_limits<int32_t>::max());
+  int64_t grid = (N + block_work_size() - 1) / block_work_size();
+  auto stream = at::cuda::getCurrentCUDAStream();
+  to_base_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
 }
 
@@ -52,6 +72,22 @@ static void to_mont_cuda_template(Tensor& self) {
   });
 
   self.set_field(c10::FieldType::Montgomery);
+}
+
+static void to_base_cuda_template(Tensor& self) {
+
+  if(self.field() == c10::FieldType::Base) {
+    throw std::runtime_error("Tensor is already in basegomery form");
+  }
+  
+  AT_DISPATCH_CURVE_TYPES(self.scalar_type(), "to_base_cuda", [&] {
+        CURVE_DISPATCH_TYPES(self.curve().type(), 
+                        to_base, 
+                        self.mutable_data_ptr<scalar_t>(),
+                        self.numel());
+  });
+
+  self.set_field(c10::FieldType::Base);
 }
 
 
@@ -101,18 +137,18 @@ Tensor& to_mont_out_cuda(const Tensor& input, Tensor& output) {
 
 Tensor to_base_cuda(const Tensor& input) {
   Tensor output = input.clone();
-  to_mont_cuda_template(output);
+  to_base_cuda_template(output);
   return output;
 }
 
 Tensor& to_base_cuda_(Tensor& self) {
-  to_mont_cuda_template(self);
+  to_base_cuda_template(self);
   return self;
 }
 
 Tensor& to_base_out_cuda(const Tensor& input, Tensor& output) {
   copy(output, input);
-  to_mont_cuda_template(output);
+  to_base_cuda_template(output);
   return output;
 }
 

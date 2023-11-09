@@ -15270,37 +15270,37 @@
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_mont_cpu
-    # CUDA: to_mont_cuda
+    CUDA: to_mont_cuda
 
 - func: to_mont_(Tensor(a!) self) -> Tensor(a!)
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_mont_cpu_
-    # CUDA: to_mont_cuda_
+    CUDA: to_mont_cuda_
 
 - func: to_mont.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_mont_out_cpu
-    # CUDA: to_mont_out_cuda
+    CUDA: to_mont_out_cuda
 
 - func: to_base(Tensor self) -> Tensor
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_base_cpu
-    # CUDA: to_base_cuda
+    CUDA: to_base_cuda
 
 - func: to_base_(Tensor(a!) self) -> Tensor(a!)
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_base_cpu_
-    # CUDA: to_base_cuda_
+    CUDA: to_base_cuda_
 
 - func: to_base.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
   device_check: NoCheck   # TensorIterator
   dispatch:
     CPU: to_base_out_cpu
-    # CUDA: to_base_out_cuda
+    CUDA: to_base_out_cuda
 
 - func: to_mont1(Tensor self) -> Tensor
   device_check: NoCheck   # TensorIterator
