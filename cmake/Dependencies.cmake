@@ -856,6 +856,11 @@ if(USE_LMDB)
   endif()
 endif()
 
+# ---[ BLST
+find_package(BLST REQUIRED)
+include_directories(SYSTEM ${BLST_INCLUDE_DIR})
+list(APPEND Caffe2_DEPENDENCY_LIBS ${BLST_LIBRARY})
+
 if(USE_OPENCL)
   message(INFO "USING OPENCL")
   find_package(OpenCL REQUIRED)
