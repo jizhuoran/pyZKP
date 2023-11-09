@@ -1,6 +1,5 @@
 #pragma once
 
-#include <_types/_uint8_t.h>
 #include <c10/macros/Export.h>
 #include <c10/util/Exception.h>
 
