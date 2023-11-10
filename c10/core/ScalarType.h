@@ -420,9 +420,13 @@ static inline bool isQIntType(ScalarType t) {
       t == ScalarType::QUInt2x4;
 }
 
+static inline bool isEllipticCurveType(ScalarType t) {
+  return t == ScalarType::ALT_BN128_Fr_G1_Base || t == ScalarType::ALT_BN128_Fr_G2_Base || t == ScalarType::ALT_BN128_Fq_G1_Base || t == ScalarType::ALT_BN128_Fq_G2_Base || t == ScalarType::ALT_BN128_Fr_G1_Mont || t == ScalarType::ALT_BN128_Fr_G2_Mont || t == ScalarType::ALT_BN128_Fq_G1_Mont || t == ScalarType::ALT_BN128_Fq_G2_Mont || t == ScalarType::BLS12_377_Fr_G1_Base || t == ScalarType::BLS12_377_Fr_G2_Base || t == ScalarType::BLS12_377_Fq_G1_Base || t == ScalarType::BLS12_377_Fq_G2_Base || t == ScalarType::BLS12_377_Fr_G1_Mont || t == ScalarType::BLS12_377_Fr_G2_Mont || t == ScalarType::BLS12_377_Fq_G1_Mont || t == ScalarType::BLS12_377_Fq_G2_Mont || t == ScalarType::BLS12_381_Fr_G1_Base || t == ScalarType::BLS12_381_Fr_G2_Base || t == ScalarType::BLS12_381_Fq_G1_Base || t == ScalarType::BLS12_381_Fq_G2_Base || t == ScalarType::BLS12_381_Fr_G1_Mont || t == ScalarType::BLS12_381_Fr_G2_Mont || t == ScalarType::BLS12_381_Fq_G1_Mont || t == ScalarType::BLS12_381_Fq_G2_Mont || t == ScalarType::MNT4753_Fr_G1_Base || t == ScalarType::MNT4753_Fr_G2_Base || t == ScalarType::MNT4753_Fq_G1_Base || t == ScalarType::MNT4753_Fq_G2_Base || t == ScalarType::MNT4753_Fr_G1_Mont || t == ScalarType::MNT4753_Fr_G2_Mont || t == ScalarType::MNT4753_Fq_G1_Mont || t == ScalarType::MNT4753_Fq_G2_Mont;
+}
+
 static inline bool isBigIntegerType(ScalarType t) {
   // Don't forget to extend this when adding new BigInteger types
-  return t == ScalarType::Field64 || t == ScalarType::BigInteger || t == ScalarType::BigInteger_Mont || t == ScalarType::FiniteField || t == ScalarType::ALT_BN128_Fr_G1_Base || t == ScalarType::ALT_BN128_Fr_G2_Base || t == ScalarType::ALT_BN128_Fq_G1_Base || t == ScalarType::ALT_BN128_Fq_G2_Base || t == ScalarType::ALT_BN128_Fr_G1_Mont || t == ScalarType::ALT_BN128_Fr_G2_Mont || t == ScalarType::ALT_BN128_Fq_G1_Mont || t == ScalarType::ALT_BN128_Fq_G2_Mont || t == ScalarType::BLS12_377_Fr_G1_Base || t == ScalarType::BLS12_377_Fr_G2_Base || t == ScalarType::BLS12_377_Fq_G1_Base || t == ScalarType::BLS12_377_Fq_G2_Base || t == ScalarType::BLS12_377_Fr_G1_Mont || t == ScalarType::BLS12_377_Fr_G2_Mont || t == ScalarType::BLS12_377_Fq_G1_Mont || t == ScalarType::BLS12_377_Fq_G2_Mont || t == ScalarType::BLS12_381_Fr_G1_Base || t == ScalarType::BLS12_381_Fr_G2_Base || t == ScalarType::BLS12_381_Fq_G1_Base || t == ScalarType::BLS12_381_Fq_G2_Base || t == ScalarType::BLS12_381_Fr_G1_Mont || t == ScalarType::BLS12_381_Fr_G2_Mont || t == ScalarType::BLS12_381_Fq_G1_Mont || t == ScalarType::BLS12_381_Fq_G2_Mont || t == ScalarType::MNT4753_Fr_G1_Base || t == ScalarType::MNT4753_Fr_G2_Base || t == ScalarType::MNT4753_Fq_G1_Base || t == ScalarType::MNT4753_Fq_G2_Base || t == ScalarType::MNT4753_Fr_G1_Mont || t == ScalarType::MNT4753_Fr_G2_Mont || t == ScalarType::MNT4753_Fq_G1_Mont || t == ScalarType::MNT4753_Fq_G2_Mont;
+  return t == ScalarType::Field64 || t == ScalarType::BigInteger || t == ScalarType::BigInteger_Mont || t == ScalarType::FiniteField || isEllipticCurveType(t);
 }
 
 static inline bool isMontgomeryField(ScalarType t) {
@@ -467,12 +471,12 @@ static inline uint8_t num_uint64(ScalarType t) {
     case ScalarType::MNT4753_Fr_G1_Mont:
     case ScalarType::MNT4753_Fr_G2_Base:
     case ScalarType::MNT4753_Fr_G2_Mont:
-      return 4;
+      return 12;
     case ScalarType::MNT4753_Fq_G1_Base:
     case ScalarType::MNT4753_Fq_G1_Mont:
     case ScalarType::MNT4753_Fq_G2_Base:
     case ScalarType::MNT4753_Fq_G2_Mont:
-      return 6;
+      return 12;
     default:
       TORCH_CHECK(false, "not a elliptic curve type");
   }
