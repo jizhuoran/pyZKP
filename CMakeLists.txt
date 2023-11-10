@@ -20,7 +20,7 @@ cmake_policy(SET CMP0069 NEW)
 cmake_policy(SET CMP0092 NEW)
 
 # ---[ Project and semantic versioning.
-project(Torch CXX C ASM)
+project(Torch CXX C)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(LINUX TRUE)
@@ -59,7 +59,6 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_LINK_WHAT_YOU_USE TRUE)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # One variable that determines whether the current cmake process is being run
 # with the main Caffe2 library. This is useful for building modules - if

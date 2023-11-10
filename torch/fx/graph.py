@@ -216,7 +216,6 @@ dtype_abbrs = {
     torch.int16: 'i16',
     torch.int32: 'i32',
     torch.int64: 'i64',
-    torch.uint64: 'u64',
     torch.bool: 'b8',
     torch.uint8: 'u8',
 }

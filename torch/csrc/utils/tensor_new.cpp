@@ -440,7 +440,6 @@ Tensor internal_new_from_data(
     }
     pybind11::gil_scoped_release no_gil;
     maybe_initialize_cuda(device);
-
     // However, it is VERY important that we trace the to() call here (even
     // though the reason this is important is a hack).  Without *some* factory
     // function call that is traced at construction time, we will consider
