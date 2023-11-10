@@ -857,9 +857,9 @@ if(USE_LMDB)
 endif()
 
 # ---[ BLST
-find_package(BLST REQUIRED)
+add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/blst")
 include_directories(SYSTEM ${BLST_INCLUDE_DIR})
-list(APPEND Caffe2_DEPENDENCY_LIBS ${BLST_LIBRARY})
+list(APPEND Caffe2_DEPENDENCY_LIBS blst)
 
 if(USE_OPENCL)
   message(INFO "USING OPENCL")

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <blst/blst_t.hpp>
+#include <third_party/blst/include/blst_t.hpp>
 
 namespace at { 
 namespace native {

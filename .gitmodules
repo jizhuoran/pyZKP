@@ -152,4 +152,3 @@
 [submodule "third_party/blst"]
 	path = third_party/blst
 	url = https://github.com/jizhuoran/blst.git
-
