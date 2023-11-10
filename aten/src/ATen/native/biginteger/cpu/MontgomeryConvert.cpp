@@ -6,10 +6,7 @@
 #include <ATen/core/interned_strings.h>
 #include <ATen/ops/copy.h>
 
-#include <ATen/native/biginteger/CurveDispatch.h>
-
 #include "CurveDef.h"
-#include "c10/util/typeid.h"
 
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
 

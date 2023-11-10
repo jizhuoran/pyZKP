@@ -1710,7 +1710,6 @@ Tensor clone(const Tensor& src, c10::optional<c10::MemoryFormat> optional_memory
   } else {
     self.copy_(src);
   }
-
   return self;
 }
 

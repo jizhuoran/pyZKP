@@ -4,8 +4,8 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
-#include "c10/util/BigInteger.h"
 
+#include <c10/util/BigInteger.h>
 #include <c10/core/OptionalRef.h>
 #include <c10/core/ScalarType.h>
 #include <c10/core/SymFloat.h>
@@ -346,8 +346,6 @@ class C10_API Scalar {
     c10::intrusive_ptr_target* p;
     v_t() {} // default constructor
   } v;
-
-#undef UNION_DECLARE
 
   template <
       typename T,

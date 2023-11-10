@@ -175,12 +175,6 @@ std::string Dtype::ToCppString() const {
   return "invalid";
 }
 
-
-
-
-
-
-
 } // namespace torch::jit::tensorexpr
 
 namespace std {

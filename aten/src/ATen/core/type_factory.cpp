@@ -14,7 +14,6 @@ namespace c10 {
 #define FORALL_BASE_PYTHON_TYPES(_) \
   _(Tensor, TensorType)             \
   _(LongTensor, TensorType)         \
-  _(ULongTensor, TensorType)        \
   _(DoubleTensor, TensorType)       \
   _(FloatTensor, TensorType)        \
   _(IntTensor, TensorType)          \

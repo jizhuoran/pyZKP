@@ -1,4 +1,3 @@
-#include "c10/core/Curve.h"
 #define TORCH_ASSERT_ONLY_METHOD_OPERATORS
 // ${generated_comment}
 

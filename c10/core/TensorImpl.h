@@ -10,7 +10,6 @@
 #include <c10/core/WrapDimMinimal.h>
 #include <c10/core/impl/PyObjectSlot.h>
 #include <c10/core/impl/SizesAndStrides.h>
-#include <c10/core/Curve.h>
 #include <c10/macros/Macros.h>
 #include <c10/util/DimVector.h>
 #include <c10/util/Exception.h>
@@ -28,8 +27,6 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
-#include "c10/core/ScalarType.h"
-#include "c10/util/BigInteger.h"
 
 // A global boolean variable to control whether we free memory when a Tensor
 // is shrunk to a smaller size. As a result, a Tensor is always going to
@@ -3299,7 +3296,6 @@ static_assert(
 #undef C10_CLANG_MAJOR_VERSION
 #undef C10_GCC_VERSION
 #undef C10_GCC_VERSION_MINOR
-#undef DISPATCH_CASE
 
 } // namespace c10
 

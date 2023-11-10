@@ -6,7 +6,6 @@
 
 #include <torch/csrc/Exceptions.h>
 #include <torch/csrc/utils/python_numbers.h>
-#include "c10/core/ScalarType.h"
 
 namespace torch {
 namespace utils {

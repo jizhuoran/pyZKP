@@ -6,7 +6,6 @@
 #include <torch/csrc/utils/object_ptr.h>
 #include <torch/csrc/utils/tensor_dtypes.h>
 #include <torch/csrc/utils/tensor_types.h>
-#include "c10/core/ScalarType.h"
 
 namespace torch {
 namespace utils {

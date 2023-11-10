@@ -3,8 +3,8 @@ import torch.nn.functional as F
 
 print(torch.__path__)
 
-x = torch.tensor([[1, 2, 3, 4, 5, 6], [5, 6, 7, 8, 9, 10]], dtype=torch.BLS12_377_Fr_G1_Base)
-x.to("cuda")
+x = torch.tensor([[9223372036854772, 2, 3, 4, 5, 6], [5, 6, 7, 8, 9, 10]], dtype=torch.BLS12_377_Fr_G1_Base)
+# x.to("cuda")
 print("===========")
 print(x)
 y = F.to_mont(x)

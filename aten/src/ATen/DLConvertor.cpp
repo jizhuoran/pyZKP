@@ -73,7 +73,7 @@ DLDataType getDLDataType(const Tensor& t) {
     case ScalarType::NumOptions:
       TORCH_CHECK(false, "NumOptions is not a valid ScalarType");
     default:
-      TORCH_CHECK(false, "Big interger types have not been supported by dlpack at the current stage");
+      TORCH_CHECK(false, "Big interger types are not supported by dlpack");
       break;
   }
   return dtype;

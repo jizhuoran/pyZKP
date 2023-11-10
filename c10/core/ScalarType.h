@@ -36,27 +36,27 @@ namespace c10 {
   _(int16_t, Short) /* 2 */                                      \
   _(int, Int) /* 3 */                                            \
   _(int64_t, Long) /* 4 */                                       \
-  _(uint64_t, ULong) /* 5 */                                     \
-  _(at::Half, Half) /* 6 */                                      \
-  _(float, Float) /* 7 */                                        \
-  _(double, Double) /* 8 */                                      \
-  _(c10::complex<c10::Half>, ComplexHalf) /* 9 */                \
-  _(c10::complex<float>, ComplexFloat) /* 10 */                  \
-  _(c10::complex<double>, ComplexDouble) /* 11 */                \
-  _(bool, Bool) /* 12 */                                         \
-  _(c10::qint8, QInt8) /* 13 */                                  \
-  _(c10::quint8, QUInt8) /* 14 */                                \
-  _(c10::qint32, QInt32) /* 15 */                                \
-  _(at::BFloat16, BFloat16) /* 16 */                             \
-  _(c10::quint4x2, QUInt4x2) /* 17 */                            \
-  _(c10::quint2x4, QUInt2x4) /* 18 */                            \
-  _(c10::bits1x8, Bits1x8) /* 19 */                              \
-  _(c10::bits2x4, Bits2x4) /* 20 */                              \
-  _(c10::bits4x2, Bits4x2) /* 21 */                              \
-  _(c10::bits8, Bits8) /* 22 */                                  \
-  _(c10::bits16, Bits16) /* 23 */                                \
-  _(c10::Float8_e5m2, Float8_e5m2) /* 24 */                      \
-  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 25 */                  \
+  _(at::Half, Half) /* 5 */                                      \
+  _(float, Float) /* 6 */                                        \
+  _(double, Double) /* 7 */                                      \
+  _(c10::complex<c10::Half>, ComplexHalf) /* 8 */                \
+  _(c10::complex<float>, ComplexFloat) /* 9 */                   \
+  _(c10::complex<double>, ComplexDouble) /* 10 */                \
+  _(bool, Bool) /* 11 */                                         \
+  _(c10::qint8, QInt8) /* 12 */                                  \
+  _(c10::quint8, QUInt8) /* 13 */                                \
+  _(c10::qint32, QInt32) /* 14 */                                \
+  _(at::BFloat16, BFloat16) /* 15 */                             \
+  _(c10::quint4x2, QUInt4x2) /* 16 */                            \
+  _(c10::quint2x4, QUInt2x4) /* 17 */                            \
+  _(c10::bits1x8, Bits1x8) /* 18 */                              \
+  _(c10::bits2x4, Bits2x4) /* 19 */                              \
+  _(c10::bits4x2, Bits4x2) /* 20 */                              \
+  _(c10::bits8, Bits8) /* 21 */                                  \
+  _(c10::bits16, Bits16) /* 22 */                                \
+  _(c10::Float8_e5m2, Float8_e5m2) /* 23 */                      \
+  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 24 */                  \
+  _(uint64_t, ULong) /* 25 */                                    \
   _(c10::Field64, Field64) /* 26 */                              \
   _(c10::BigInteger, BigInteger) /* 27 */                        \
   _(c10::BigInteger_Mont, BigInteger_Mont) /* 28 */              \
@@ -193,7 +193,6 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(int16_t, Short)            \
   _(int, Int)                  \
   _(int64_t, Long)
-// uint64_t is not a INT type in our design
 
 #define AT_FORALL_SCALAR_TYPES(_) \
   _(uint8_t, Byte)                \
@@ -616,7 +615,6 @@ static inline ScalarType promoteTypes(ScalarType a, ScalarType b) {
   constexpr auto i2 = ScalarType::Short;
   constexpr auto i4 = ScalarType::Int;
   constexpr auto i8 = ScalarType::Long;
-  constexpr auto u8 = ScalarType::ULong;
   constexpr auto f2 = ScalarType::Half;
   constexpr auto f4 = ScalarType::Float;
   constexpr auto f8 = ScalarType::Double;
@@ -679,27 +677,30 @@ static inline ScalarType promoteTypes(ScalarType a, ScalarType b) {
   // clang-format off
   static constexpr ScalarType _promoteTypesLookup[
       NUM_PROMOTE_TYPES][NUM_PROMOTE_TYPES] = {
-      /*        u1  i1  i2  i4  i8  u8, f2  f4  f8  c2  c4  c8  b1  q1  q2  q3  bf  b8  h8*/
-      /* u1 */ {u1, i2, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, u1, ud, ud, ud, bf, b8, h8},
-      /* i1 */ {i2, i1, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, i1, ud, ud, ud, bf, b8, h8},
-      /* i2 */ {i2, i2, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, i2, ud, ud, ud, bf, b8, h8},
-      /* i4 */ {i4, i4, i4, i4, i8, u8, f2, f4, f8, c2, c4, c8, i4, ud, ud, ud, bf, b8, h8},
-      /* i8 */ {i8, i8, i8, i8, i8, u8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
-      /* u8 */ {i8, i8, i8, i8, i8, u8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
-      /* f2 */ {f2, f2, f2, f2, f2, f2, f2, f4, f8, c2, c4, c8, f2, ud, ud, ud, f4, f4, f4},
-      /* f4 */ {f4, f4, f4, f4, f4, f4, f4, f4, f8, c4, c4, c8, f4, ud, ud, ud, f4, f4, f4},
-      /* f8 */ {f8, f8, f8, f8, f8, f8, f8, f8, f8, c8, c8, c8, f8, ud, ud, ud, f8, f8, f8},
-      /* c2 */ {c2, c2, c2, c2, c2, c2, c2, c4, c8, c2, c4, c8, c2, ud, ud, ud, c4, c4, c4},
-      /* c4 */ {c4, c4, c4, c4, c4, c4, c4, c4, c8, c4, c4, c8, c4, ud, ud, ud, c4, c4, c4},
-      /* c8 */ {c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, ud, ud, ud, c8, c8, c8},
-      /* b1 */ {u1, i1, i2, i4, i8, u8, f2, f4, f8, c2, c4, c8, b1, ud, ud, ud, bf, b8, h8},
-      /* q1 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* q2 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* q3 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
-      /* bf */ {bf, bf, bf, bf, bf, bf, f4, f4, f8, c4, c4, c8, bf, ud, ud, ud, bf, bf, bf},
-      /* b8 */ {b8, b8, b8, b8, b8, b8, f4, f4, f8, c4, c4, c8, b8, ud, ud, ud, bf, b8, ud},
-      /* h8 */ {h8, h8, h8, h8, h8, h8, f4, f4, f8, c4, c4, c8, h8, ud, ud, ud, bf, ud, h8},
+      /*        u1  i1  i2  i4  i8  f2  f4  f8  c2  c4  c8  b1  q1  q2  q3  bf  b8  h8*/
+      /* u1 */ {u1, i2, i2, i4, i8, f2, f4, f8, c2, c4, c8, u1, ud, ud, ud, bf, b8, h8},
+      /* i1 */ {i2, i1, i2, i4, i8, f2, f4, f8, c2, c4, c8, i1, ud, ud, ud, bf, b8, h8},
+      /* i2 */ {i2, i2, i2, i4, i8, f2, f4, f8, c2, c4, c8, i2, ud, ud, ud, bf, b8, h8},
+      /* i4 */ {i4, i4, i4, i4, i8, f2, f4, f8, c2, c4, c8, i4, ud, ud, ud, bf, b8, h8},
+      /* i8 */ {i8, i8, i8, i8, i8, f2, f4, f8, c2, c4, c8, i8, ud, ud, ud, bf, b8, h8},
+      /* f2 */ {f2, f2, f2, f2, f2, f2, f4, f8, c2, c4, c8, f2, ud, ud, ud, f4, f4, f4},
+      /* f4 */ {f4, f4, f4, f4, f4, f4, f4, f8, c4, c4, c8, f4, ud, ud, ud, f4, f4, f4},
+      /* f8 */ {f8, f8, f8, f8, f8, f8, f8, f8, c8, c8, c8, f8, ud, ud, ud, f8, f8, f8},
+      /* c2 */ {c2, c2, c2, c2, c2, c2, c4, c8, c2, c4, c8, c2, ud, ud, ud, c4, c4, c4},
+      /* c4 */ {c4, c4, c4, c4, c4, c4, c4, c8, c4, c4, c8, c4, ud, ud, ud, c4, c4, c4},
+      /* c8 */ {c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, c8, ud, ud, ud, c8, c8, c8},
+      /* b1 */ {u1, i1, i2, i4, i8, f2, f4, f8, c2, c4, c8, b1, ud, ud, ud, bf, b8, h8},
+      /* q1 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* q2 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* q3 */ {ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud, ud},
+      /* bf */ {bf, bf, bf, bf, bf, f4, f4, f8, c4, c4, c8, bf, ud, ud, ud, bf, bf, bf},
+      /* b8 */ {b8, b8, b8, b8, b8, f4, f4, f8, c4, c4, c8, b8, ud, ud, ud, bf, b8, ud},
+      /* h8 */ {h8, h8, h8, h8, h8, f4, f4, f8, c4, c4, c8, h8, ud, ud, ud, bf, ud, h8},
   };
+
+
+
+
   // clang-format on
   return _promoteTypesLookup[static_cast<int>(a)][static_cast<int>(b)];
 }

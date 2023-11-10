@@ -9,8 +9,6 @@
 #include <ATen/cuda/CUDAContext.h>
 #include <ATen/native/cuda/thread_constants.h>
 
-#include <ATen/native/biginteger/CurveDispatch.h>
-
 #include "CurveDef.cuh"
 
 #pragma clang diagnostic ignored "-Wmissing-prototypes"

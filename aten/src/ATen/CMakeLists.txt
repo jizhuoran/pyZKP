@@ -116,10 +116,9 @@ file(GLOB native_quantized_cpp
             "native/quantized/cpu/*.cpp")
 file(GLOB native_nested_cpp "native/nested/*.cpp")
 file(GLOB native_transformers_cpp "native/transformers/*.cpp")
-file(GLOB native_biginteger_cpp "native/biginteger/*.cpp" "native/biginteger/cpu/*.cpp" )
-file(GLOB native_blst_cpp "native/biginteger/cpu/ff/blst/*.cpp" "native/biginteger/cpu/ff/blst/*.S")
-
-list(APPEND native_biginteger_cpp ${native_blst_cpp})
+file(GLOB native_biginteger_cpp "native/biginteger/*.cpp" "native/biginteger/cpu/*.cpp")
+file(GLOB_RECURSE native_biginteger_cpu_cpp "native/biginteger/cpu/*.cpp")
+list(APPEND native_biginteger_cpp ${native_biginteger_cpu_cpp})
 
 
 file(GLOB native_h "native/*.h")

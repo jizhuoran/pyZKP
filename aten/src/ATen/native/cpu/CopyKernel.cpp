@@ -210,8 +210,7 @@ void direct_copy_kernel(TensorIteratorBase &iter) {
           [=](scalar_t a) -> scalar_t { return a; },
           [=](Vectorized<scalar_t> a) -> Vectorized<scalar_t> { return a; });
     });
-  } 
-  else {
+  } else {
     _AT_DISPATCH_ALL_TYPES_NO_CF(dtype, "copy_kernel", [&] {
       cpu_kernel_vec(
           iter,

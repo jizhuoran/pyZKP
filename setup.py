@@ -355,7 +355,6 @@ def get_submodule_folders():
             "QNNPACK",
             "fbgemm",
             "cutlass",
-            "cutlass",
         ]
     ]
     if not os.path.exists(git_modules_path):
@@ -940,8 +939,8 @@ def configure_extension_build():
     main_link_args = []
     main_sources = ["torch/csrc/stub.c"]
 
-    # if cmake_cache_vars["USE_CUDA"]:
-        # library_dirs.append(os.path.dirname(cmake_cache_vars["CUDA_CUDA_LIB"]))
+    if cmake_cache_vars["USE_CUDA"]:
+        library_dirs.append(os.path.dirname(cmake_cache_vars["CUDA_CUDA_LIB"]))
 
     if build_type.is_debug():
         if IS_WINDOWS:
