@@ -421,10 +421,6 @@ Tensor empty_like(
     namedinference::propagate_names(result, self.names());
   }
 
-  if(self.options().dtype() == at::kEllipticCurve) {
-    result.to_curve(self.curve(), self.field() == FieldType::Montgomery);
-  }
-
   // never propagate Conjugate, Negative, and ZeroTensor dispatch key
   result._set_conj(false);
   result._set_neg(false);
@@ -1713,10 +1709,6 @@ Tensor clone(const Tensor& src, c10::optional<c10::MemoryFormat> optional_memory
     self.zero_();
   } else {
     self.copy_(src);
-  }
-
-  if(src.options().dtype() == at::kEllipticCurve) {
-    self.to_curve(src.curve(), src.field() == FieldType::Montgomery);
   }
 
   return self;

@@ -72,11 +72,7 @@ DLDataType getDLDataType(const Tensor& t) {
       TORCH_CHECK(false, "Undefined is not a valid ScalarType");
     case ScalarType::NumOptions:
       TORCH_CHECK(false, "NumOptions is not a valid ScalarType");
-    case ScalarType::ULong:
-    case ScalarType::Field64:
-    case ScalarType::BigInteger:
-    case ScalarType::FiniteField:
-    case ScalarType::EllipticCurve:
+    default:
       TORCH_CHECK(false, "Big interger types have not been supported by dlpack at the current stage");
       break;
   }

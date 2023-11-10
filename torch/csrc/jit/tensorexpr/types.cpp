@@ -105,13 +105,81 @@ std::string Dtype::ToCppString() const {
       return "big_integer";
     case ScalarType::FiniteField:
       return "finite_field";
-    case ScalarType::EllipticCurve:
-      return "elliptic_curve";
+    case ScalarType::ALT_BN128_Fr_G1_Base:
+      return "ALT_BN128, Fr, G1, Base>";
+    case ScalarType::ALT_BN128_Fr_G2_Base:
+      return "ALT_BN128, Fr, G2, Base>";
+    case ScalarType::ALT_BN128_Fq_G1_Base:
+      return "ALT_BN128, Fq, G1, Base>";
+    case ScalarType::ALT_BN128_Fq_G2_Base:
+      return "ALT_BN128, Fq, G2, Base>";
+    case ScalarType::BLS12_377_Fr_G1_Base:
+      return "BLS12_377, Fr, G1, Base>";
+    case ScalarType::BLS12_377_Fr_G2_Base:
+      return "BLS12_377, Fr, G2, Base>";
+    case ScalarType::BLS12_377_Fq_G1_Base:
+      return "<BLS12_377, Fq, G1, Base>";
+    case ScalarType::BLS12_377_Fq_G2_Base:
+      return "<BLS12_377, Fq, G2, Base>";
+    case ScalarType::BLS12_381_Fr_G1_Base:
+      return "<BLS12_381, Fr, G1, Base>";
+    case ScalarType::BLS12_381_Fr_G2_Base:
+      return "<BLS12_381, Fr, G2, Base>";
+    case ScalarType::BLS12_381_Fq_G1_Base:
+      return "<BLS12_381, Fq, G1, Base>";
+    case ScalarType::BLS12_381_Fq_G2_Base:
+      return "<BLS12_381, Fq, G2, Base>";
+    case ScalarType::MNT4753_Fr_G1_Base:
+      return "<MNT4753, Fr, G1, Base>";
+    case ScalarType::MNT4753_Fr_G2_Base:
+      return "<MNT4753, Fr, G2, Base>";
+    case ScalarType::MNT4753_Fq_G1_Base:
+      return "<MNT4753, Fq, G1, Base>";
+    case ScalarType::MNT4753_Fq_G2_Base:
+      return "<MNT4753, Fq, G2, Base>";
+    case ScalarType::ALT_BN128_Fr_G1_Mont:
+      return "<ALT_BN128, Fr, G1, Mont>";
+    case ScalarType::ALT_BN128_Fr_G2_Mont:
+      return "<ALT_BN128, Fr, G2, Mont>";
+    case ScalarType::ALT_BN128_Fq_G1_Mont:
+      return "<ALT_BN128, Fq, G1, Mont>";
+    case ScalarType::ALT_BN128_Fq_G2_Mont:
+      return "<ALT_BN128, Fq, G2, Mont>";
+    case ScalarType::BLS12_377_Fr_G1_Mont:
+      return "<BLS12_377, Fr, G1, Mont>";
+    case ScalarType::BLS12_377_Fr_G2_Mont:
+      return "<BLS12_377, Fr, G2, Mont>";
+    case ScalarType::BLS12_377_Fq_G1_Mont:
+      return "<BLS12_377, Fq, G1, Mont>";
+    case ScalarType::BLS12_377_Fq_G2_Mont:
+      return "<BLS12_377, Fq, G2, Mont>";
+    case ScalarType::BLS12_381_Fr_G1_Mont:
+      return "<BLS12_381, Fr, G1, Mont>";
+    case ScalarType::BLS12_381_Fr_G2_Mont:
+      return "<BLS12_381, Fr, G2, Mont>";
+    case ScalarType::BLS12_381_Fq_G1_Mont:
+      return "<BLS12_381, Fq, G1, Mont>";
+    case ScalarType::BLS12_381_Fq_G2_Mont:
+      return "<BLS12_381, Fq, G2, Mont>";
+    case ScalarType::MNT4753_Fr_G1_Mont:
+      return "<MNT4753, Fr, G1, Mont>";
+    case ScalarType::MNT4753_Fr_G2_Mont:
+      return "<MNT4753, Fr, G2, Mont>";
+    case ScalarType::MNT4753_Fq_G1_Mont:
+      return "<MNT4753, Fq, G1, Mont>";
+    case ScalarType::MNT4753_Fq_G2_Mont:
+      return "<MNT4753, Fq, G2, Mont>";
     default:
       throw unsupported_dtype();
   }
   return "invalid";
 }
+
+
+
+
+
+
 
 } // namespace torch::jit::tensorexpr
 

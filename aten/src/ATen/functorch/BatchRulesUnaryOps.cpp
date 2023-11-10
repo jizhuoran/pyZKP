@@ -134,7 +134,6 @@ TORCH_LIBRARY_IMPL(aten, FuncTorchBatched, m) {
   UNARY_POINTWISE_ALL(tan);
   UNARY_POINTWISE_ALL(threshold);
   UNARY_POINTWISE_ALL(trunc);
-  UNARY_POINTWISE_ALL(to_mont1);
 
   // special-related
   UNARY_POINTWISE_ALL(i0);

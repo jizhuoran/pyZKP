@@ -2885,25 +2885,6 @@ static void nnc_aten_linalg_solve(
   }
 }
 
-static void nnc_aten_to_mont1(
-    int64_t bufs_num,
-    void** buf_data,
-    int64_t* buf_ranks,
-    int64_t* buf_dims,
-    int64_t* buf_strides,
-    int8_t* buf_dtypes,
-    int64_t args_num,
-    int64_t* extra_args) {
-  std::vector<at::Tensor> tensors = constructTensors(
-      bufs_num, buf_data, buf_ranks, buf_dims, buf_strides, buf_dtypes);
-  at::Tensor& r = tensors[0];
-  const at::Tensor& self = tensors[1];
-  try {
-    at::to_mont1_out(r, self);
-  } catch (...) {
-  }
-}
-
 #ifndef C10_MOBILE
 const static RegisterNNCExternalFunction nnc_abs("nnc_aten_abs", nnc_aten_abs);
 const static RegisterNNCExternalFunction nnc_absolute(
@@ -3312,9 +3293,6 @@ const static RegisterNNCExternalFunction nnc_linalg_svdvals(
 const static RegisterNNCExternalFunction nnc_linalg_solve(
     "nnc_aten_linalg_solve",
     nnc_aten_linalg_solve);
-const static RegisterNNCExternalFunction nnc_to_mont1(
-    "nnc_aten_to_mont1",
-    nnc_aten_to_mont1);
 #endif
 
 #ifdef C10_MOBILE

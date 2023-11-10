@@ -1681,22 +1681,6 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
     get_extra_meta().custom_storage_error_msg_ = s;
   }
 
-  /**
-  * The curve info of a Tensor if any
-  */
-  Curve curve() const {
-    return curve_opt_;
-  }
-
-  void to_curve(Curve curve_info, bool in_montgomary_space) {
-    curve_opt_ = curve_info;
-    data_type_ = caffe2::TypeMeta::Make<c10::EllipticCurve>();
-    field_ = in_montgomary_space ? FieldType::Montgomery : FieldType::Base;
-  }
-
-  c10::FieldType field() const { return field_; }
-  void set_field(c10::FieldType field) { field_ = field; }
-
  protected:
   /**
    * Returns the human-readable name of the actual type of this object (e.g.,
@@ -2347,6 +2331,10 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
       at::Storage storage,
       const caffe2::TypeMeta data_type) {
     set_storage_keep_dtype(std::move(storage));
+    data_type_ = data_type;
+  }
+
+  void set_dtype(const caffe2::TypeMeta data_type) {
     data_type_ = data_type;
   }
 
@@ -3063,13 +3051,6 @@ struct C10_API TensorImpl : public c10::intrusive_ptr_target {
 
   // Call into Python for layout()
   bool python_custom_layout_ : 1;
-
-  // Store the curve information if the tensor stores elliptic curve datas 
-  c10::Curve curve_opt_;
-
-  // Only for Field data type, return if the tensor is in Montgomary space
-  c10::FieldType field_;
-
 
   // The set of DispatchKeys which describe this tensor.  NB: this
   // does NOT include Autograd (historically, it did, but

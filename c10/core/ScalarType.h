@@ -30,37 +30,70 @@ namespace c10 {
 
 // NB: Order matters for this macro; it is relied upon in
 // _promoteTypesLookup and the serialization format.
-#define AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(_) \
-  _(uint8_t, Byte) /* 0 */                               \
-  _(int8_t, Char) /* 1 */                                \
-  _(int16_t, Short) /* 2 */                              \
-  _(int, Int) /* 3 */                                    \
-  _(int64_t, Long) /* 4 */                               \
-  _(uint64_t, ULong) /* 5 */                             \
-  _(at::Half, Half) /* 6 */                              \
-  _(float, Float) /* 7 */                                \
-  _(double, Double) /* 8 */                              \
-  _(c10::complex<c10::Half>, ComplexHalf) /* 9 */        \
-  _(c10::complex<float>, ComplexFloat) /* 10 */          \
-  _(c10::complex<double>, ComplexDouble) /* 11 */        \
-  _(bool, Bool) /* 12 */                                 \
-  _(c10::qint8, QInt8) /* 13 */                          \
-  _(c10::quint8, QUInt8) /* 14 */                        \
-  _(c10::qint32, QInt32) /* 15 */                        \
-  _(at::BFloat16, BFloat16) /* 16 */                     \
-  _(c10::quint4x2, QUInt4x2) /* 17 */                    \
-  _(c10::quint2x4, QUInt2x4) /* 18 */                    \
-  _(c10::bits1x8, Bits1x8) /* 19 */                      \
-  _(c10::bits2x4, Bits2x4) /* 20 */                      \
-  _(c10::bits4x2, Bits4x2) /* 21 */                      \
-  _(c10::bits8, Bits8) /* 22 */                          \
-  _(c10::bits16, Bits16) /* 23 */                        \
-  _(c10::Float8_e5m2, Float8_e5m2) /* 24 */              \
-  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 25 */          \
-  _(c10::Field64, Field64) /* 26 */                      \
-  _(c10::BigInteger, BigInteger) /* 27 */                \
-  _(c10::FiniteField, FiniteField) /* 28 */              \
-  _(c10::EllipticCurve, EllipticCurve)
+#define AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(_)         \
+  _(uint8_t, Byte) /* 0 */                                       \
+  _(int8_t, Char) /* 1 */                                        \
+  _(int16_t, Short) /* 2 */                                      \
+  _(int, Int) /* 3 */                                            \
+  _(int64_t, Long) /* 4 */                                       \
+  _(uint64_t, ULong) /* 5 */                                     \
+  _(at::Half, Half) /* 6 */                                      \
+  _(float, Float) /* 7 */                                        \
+  _(double, Double) /* 8 */                                      \
+  _(c10::complex<c10::Half>, ComplexHalf) /* 9 */                \
+  _(c10::complex<float>, ComplexFloat) /* 10 */                  \
+  _(c10::complex<double>, ComplexDouble) /* 11 */                \
+  _(bool, Bool) /* 12 */                                         \
+  _(c10::qint8, QInt8) /* 13 */                                  \
+  _(c10::quint8, QUInt8) /* 14 */                                \
+  _(c10::qint32, QInt32) /* 15 */                                \
+  _(at::BFloat16, BFloat16) /* 16 */                             \
+  _(c10::quint4x2, QUInt4x2) /* 17 */                            \
+  _(c10::quint2x4, QUInt2x4) /* 18 */                            \
+  _(c10::bits1x8, Bits1x8) /* 19 */                              \
+  _(c10::bits2x4, Bits2x4) /* 20 */                              \
+  _(c10::bits4x2, Bits4x2) /* 21 */                              \
+  _(c10::bits8, Bits8) /* 22 */                                  \
+  _(c10::bits16, Bits16) /* 23 */                                \
+  _(c10::Float8_e5m2, Float8_e5m2) /* 24 */                      \
+  _(c10::Float8_e4m3fn, Float8_e4m3fn) /* 25 */                  \
+  _(c10::Field64, Field64) /* 26 */                              \
+  _(c10::BigInteger, BigInteger) /* 27 */                        \
+  _(c10::BigInteger_Mont, BigInteger_Mont) /* 28 */              \
+  _(c10::FiniteField, FiniteField) /* 29 */                      \
+  _(c10::NOT_CURVE, NOT_CURVE) /* 30 */                          \
+  _(c10::ALT_BN128_Fr_G1_Base, ALT_BN128_Fr_G1_Base) /* 31.1 */  \
+  _(c10::ALT_BN128_Fr_G2_Base, ALT_BN128_Fr_G2_Base) /* 31.2 */  \
+  _(c10::ALT_BN128_Fq_G1_Base, ALT_BN128_Fq_G1_Base) /* 31.3 */  \
+  _(c10::ALT_BN128_Fq_G2_Base, ALT_BN128_Fq_G2_Base) /* 31.4 */  \
+  _(c10::ALT_BN128_Fr_G1_Mont, ALT_BN128_Fr_G1_Mont) /* 31.5 */  \
+  _(c10::ALT_BN128_Fr_G2_Mont, ALT_BN128_Fr_G2_Mont) /* 31.6 */  \
+  _(c10::ALT_BN128_Fq_G1_Mont, ALT_BN128_Fq_G1_Mont) /* 31.7 */  \
+  _(c10::ALT_BN128_Fq_G2_Mont, ALT_BN128_Fq_G2_Mont) /* 31.8 */  \
+  _(c10::BLS12_377_Fr_G1_Base, BLS12_377_Fr_G1_Base) /* 32.1 */  \
+  _(c10::BLS12_377_Fr_G2_Base, BLS12_377_Fr_G2_Base) /* 32.2 */  \
+  _(c10::BLS12_377_Fq_G1_Base, BLS12_377_Fq_G1_Base) /* 32.3 */  \
+  _(c10::BLS12_377_Fq_G2_Base, BLS12_377_Fq_G2_Base) /* 32.4 */  \
+  _(c10::BLS12_377_Fr_G1_Mont, BLS12_377_Fr_G1_Mont) /* 32.5 */  \
+  _(c10::BLS12_377_Fr_G2_Mont, BLS12_377_Fr_G2_Mont) /* 32.6 */  \
+  _(c10::BLS12_377_Fq_G1_Mont, BLS12_377_Fq_G1_Mont) /* 32.7 */  \
+  _(c10::BLS12_377_Fq_G2_Mont, BLS12_377_Fq_G2_Mont) /* 32.8 */  \
+  _(c10::BLS12_381_Fr_G1_Base, BLS12_381_Fr_G1_Base) /* 33.1 */  \
+  _(c10::BLS12_381_Fr_G2_Base, BLS12_381_Fr_G2_Base) /* 33.2 */  \
+  _(c10::BLS12_381_Fq_G1_Base, BLS12_381_Fq_G1_Base) /* 33.3 */  \
+  _(c10::BLS12_381_Fq_G2_Base, BLS12_381_Fq_G2_Base) /* 33.4 */  \
+  _(c10::BLS12_381_Fr_G1_Mont, BLS12_381_Fr_G1_Mont) /* 33.5 */  \
+  _(c10::BLS12_381_Fr_G2_Mont, BLS12_381_Fr_G2_Mont) /* 33.6 */  \
+  _(c10::BLS12_381_Fq_G1_Mont, BLS12_381_Fq_G1_Mont) /* 33.7 */  \
+  _(c10::BLS12_381_Fq_G2_Mont, BLS12_381_Fq_G2_Mont) /* 33.8 */  \
+  _(c10::MNT4753_Fr_G1_Base, MNT4753_Fr_G1_Base) /* 34.1 */      \
+  _(c10::MNT4753_Fr_G2_Base, MNT4753_Fr_G2_Base) /* 34.2 */      \
+  _(c10::MNT4753_Fq_G1_Base, MNT4753_Fq_G1_Base) /* 34.3 */      \
+  _(c10::MNT4753_Fq_G2_Base, MNT4753_Fq_G2_Base) /* 34.4 */      \
+  _(c10::MNT4753_Fr_G1_Mont, MNT4753_Fr_G1_Mont) /* 34.5 */      \
+  _(c10::MNT4753_Fr_G2_Mont, MNT4753_Fr_G2_Mont) /* 34.6 */      \
+  _(c10::MNT4753_Fq_G1_Mont, MNT4753_Fq_G1_Mont) /* 34.7 */      \
+  _(c10::MNT4753_Fq_G2_Mont, MNT4753_Fq_G2_Mont) /* 34.8 */
 
 // If you want to support ComplexHalf for real, add ComplexHalf
 // into this macro (and change the name).  But beware: convert()
@@ -270,12 +303,45 @@ AT_FORALL_SCALAR_TYPES_WITH_COMPLEX_AND_QINTS(SPECIALIZE_CppTypeToScalarType)
   _(c10::quint4x2, QUInt4x2)    \
   _(c10::quint2x4, QUInt2x4)
 
-#define AT_FORALL_FIELD_TYPES(_)      \
-  _(uint64_t, ULong)                  \
-  _(c10::Field64, Field64)            \
-  _(c10::BigInteger, BigInteger)      \
-  _(c10::FiniteField, FiniteField)    \
-  _(c10::EllipticCurve, EllipticCurve)
+#define AT_FORALL_FIELD_TYPES(_)                     \
+  _(uint64_t, ULong)                                 \
+  _(c10::Field64, Field64)                           \
+  _(c10::BigInteger, BigInteger)                     \
+  _(c10::FiniteField, FiniteField)                   \
+  _(c10::ALT_BN128_Fr_G1_Base, ALT_BN128_Fr_G1_Base) \
+  _(c10::ALT_BN128_Fr_G2_Base, ALT_BN128_Fr_G2_Base) \
+  _(c10::ALT_BN128_Fq_G1_Base, ALT_BN128_Fq_G1_Base) \
+  _(c10::ALT_BN128_Fq_G2_Base, ALT_BN128_Fq_G2_Base) \
+  _(c10::ALT_BN128_Fr_G1_Mont, ALT_BN128_Fr_G1_Mont) \
+  _(c10::ALT_BN128_Fr_G2_Mont, ALT_BN128_Fr_G2_Mont) \
+  _(c10::ALT_BN128_Fq_G1_Mont, ALT_BN128_Fq_G1_Mont) \
+  _(c10::ALT_BN128_Fq_G2_Mont, ALT_BN128_Fq_G2_Mont) \
+  _(c10::BLS12_377_Fr_G1_Base, BLS12_377_Fr_G1_Base) \
+  _(c10::BLS12_377_Fr_G2_Base, BLS12_377_Fr_G2_Base) \
+  _(c10::BLS12_377_Fq_G1_Base, BLS12_377_Fq_G1_Base) \
+  _(c10::BLS12_377_Fq_G2_Base, BLS12_377_Fq_G2_Base) \
+  _(c10::BLS12_377_Fr_G1_Mont, BLS12_377_Fr_G1_Mont) \
+  _(c10::BLS12_377_Fr_G2_Mont, BLS12_377_Fr_G2_Mont) \
+  _(c10::BLS12_377_Fq_G1_Mont, BLS12_377_Fq_G1_Mont) \
+  _(c10::BLS12_377_Fq_G2_Mont, BLS12_377_Fq_G2_Mont) \
+  _(c10::BLS12_381_Fr_G1_Base, BLS12_381_Fr_G1_Base) \
+  _(c10::BLS12_381_Fr_G2_Base, BLS12_381_Fr_G2_Base) \
+  _(c10::BLS12_381_Fq_G1_Base, BLS12_381_Fq_G1_Base) \
+  _(c10::BLS12_381_Fq_G2_Base, BLS12_381_Fq_G2_Base) \
+  _(c10::BLS12_381_Fr_G1_Mont, BLS12_381_Fr_G1_Mont) \
+  _(c10::BLS12_381_Fr_G2_Mont, BLS12_381_Fr_G2_Mont) \
+  _(c10::BLS12_381_Fq_G1_Mont, BLS12_381_Fq_G1_Mont) \
+  _(c10::BLS12_381_Fq_G2_Mont, BLS12_381_Fq_G2_Mont) \
+  _(c10::MNT4753_Fr_G1_Base, MNT4753_Fr_G1_Base)     \
+  _(c10::MNT4753_Fr_G2_Base, MNT4753_Fr_G2_Base)     \
+  _(c10::MNT4753_Fq_G1_Base, MNT4753_Fq_G1_Base)     \
+  _(c10::MNT4753_Fq_G2_Base, MNT4753_Fq_G2_Base)     \
+  _(c10::MNT4753_Fr_G1_Mont, MNT4753_Fr_G1_Mont)     \
+  _(c10::MNT4753_Fr_G2_Mont, MNT4753_Fr_G2_Mont)     \
+  _(c10::MNT4753_Fq_G1_Mont, MNT4753_Fq_G1_Mont)     \
+  _(c10::MNT4753_Fq_G2_Mont, MNT4753_Fq_G2_Mont)
+
+
 
 #define AT_FORALL_COMPLEX_TYPES(_)     \
   _(c10::complex<float>, ComplexFloat) \
@@ -357,8 +423,60 @@ static inline bool isQIntType(ScalarType t) {
 
 static inline bool isBigIntegerType(ScalarType t) {
   // Don't forget to extend this when adding new BigInteger types
-  return t == ScalarType::Field64 || t == ScalarType::BigInteger ||
-      t == ScalarType::FiniteField || t == ScalarType::EllipticCurve;
+  return t == ScalarType::Field64 || t == ScalarType::BigInteger || t == ScalarType::BigInteger_Mont || t == ScalarType::FiniteField || t == ScalarType::ALT_BN128_Fr_G1_Base || t == ScalarType::ALT_BN128_Fr_G2_Base || t == ScalarType::ALT_BN128_Fq_G1_Base || t == ScalarType::ALT_BN128_Fq_G2_Base || t == ScalarType::ALT_BN128_Fr_G1_Mont || t == ScalarType::ALT_BN128_Fr_G2_Mont || t == ScalarType::ALT_BN128_Fq_G1_Mont || t == ScalarType::ALT_BN128_Fq_G2_Mont || t == ScalarType::BLS12_377_Fr_G1_Base || t == ScalarType::BLS12_377_Fr_G2_Base || t == ScalarType::BLS12_377_Fq_G1_Base || t == ScalarType::BLS12_377_Fq_G2_Base || t == ScalarType::BLS12_377_Fr_G1_Mont || t == ScalarType::BLS12_377_Fr_G2_Mont || t == ScalarType::BLS12_377_Fq_G1_Mont || t == ScalarType::BLS12_377_Fq_G2_Mont || t == ScalarType::BLS12_381_Fr_G1_Base || t == ScalarType::BLS12_381_Fr_G2_Base || t == ScalarType::BLS12_381_Fq_G1_Base || t == ScalarType::BLS12_381_Fq_G2_Base || t == ScalarType::BLS12_381_Fr_G1_Mont || t == ScalarType::BLS12_381_Fr_G2_Mont || t == ScalarType::BLS12_381_Fq_G1_Mont || t == ScalarType::BLS12_381_Fq_G2_Mont || t == ScalarType::MNT4753_Fr_G1_Base || t == ScalarType::MNT4753_Fr_G2_Base || t == ScalarType::MNT4753_Fq_G1_Base || t == ScalarType::MNT4753_Fq_G2_Base || t == ScalarType::MNT4753_Fr_G1_Mont || t == ScalarType::MNT4753_Fr_G2_Mont || t == ScalarType::MNT4753_Fq_G1_Mont || t == ScalarType::MNT4753_Fq_G2_Mont;
+}
+
+static inline bool isMontgomeryField(ScalarType t) {
+  // Don't forget to extend this when adding new BigInteger types
+  return t == ScalarType::BigInteger_Mont || t == ScalarType::ALT_BN128_Fr_G1_Mont || t == ScalarType::ALT_BN128_Fr_G2_Mont || t == ScalarType::ALT_BN128_Fq_G1_Mont || t == ScalarType::ALT_BN128_Fq_G2_Mont || t == ScalarType::BLS12_377_Fr_G1_Mont || t == ScalarType::BLS12_377_Fr_G2_Mont || t == ScalarType::BLS12_377_Fq_G1_Mont || t == ScalarType::BLS12_377_Fq_G2_Mont || t == ScalarType::BLS12_381_Fr_G1_Mont || t == ScalarType::BLS12_381_Fr_G2_Mont || t == ScalarType::BLS12_381_Fq_G1_Mont || t == ScalarType::BLS12_381_Fq_G2_Mont || t == ScalarType::MNT4753_Fr_G1_Mont || t == ScalarType::MNT4753_Fr_G2_Mont || t == ScalarType::MNT4753_Fq_G1_Mont || t == ScalarType::MNT4753_Fq_G2_Mont;
+}
+
+
+
+static inline uint8_t num_uint64(ScalarType t) {
+  switch (t) {
+    case ScalarType::ALT_BN128_Fr_G1_Base:
+    case ScalarType::ALT_BN128_Fr_G1_Mont:
+    case ScalarType::ALT_BN128_Fr_G2_Base:
+    case ScalarType::ALT_BN128_Fr_G2_Mont:
+    case ScalarType::ALT_BN128_Fq_G1_Base:
+    case ScalarType::ALT_BN128_Fq_G1_Mont:
+    case ScalarType::ALT_BN128_Fq_G2_Base:
+    case ScalarType::ALT_BN128_Fq_G2_Mont:
+      return 4;
+    case ScalarType::BLS12_377_Fr_G1_Base:
+    case ScalarType::BLS12_377_Fr_G1_Mont:
+    case ScalarType::BLS12_377_Fr_G2_Base:
+    case ScalarType::BLS12_377_Fr_G2_Mont:
+      return 4;
+    case ScalarType::BLS12_377_Fq_G1_Base:
+    case ScalarType::BLS12_377_Fq_G1_Mont:
+    case ScalarType::BLS12_377_Fq_G2_Base:
+    case ScalarType::BLS12_377_Fq_G2_Mont:
+      return 6;
+    case ScalarType::BLS12_381_Fr_G1_Base:
+    case ScalarType::BLS12_381_Fr_G1_Mont:
+    case ScalarType::BLS12_381_Fr_G2_Base:
+    case ScalarType::BLS12_381_Fr_G2_Mont:
+      return 4;
+    case ScalarType::BLS12_381_Fq_G1_Base:
+    case ScalarType::BLS12_381_Fq_G1_Mont:
+    case ScalarType::BLS12_381_Fq_G2_Base:
+    case ScalarType::BLS12_381_Fq_G2_Mont:
+      return 6;
+    case ScalarType::MNT4753_Fr_G1_Base:
+    case ScalarType::MNT4753_Fr_G1_Mont:
+    case ScalarType::MNT4753_Fr_G2_Base:
+    case ScalarType::MNT4753_Fr_G2_Mont:
+      return 4;
+    case ScalarType::MNT4753_Fq_G1_Base:
+    case ScalarType::MNT4753_Fq_G1_Mont:
+    case ScalarType::MNT4753_Fq_G2_Base:
+    case ScalarType::MNT4753_Fq_G2_Mont:
+      return 6;
+    default:
+      TORCH_CHECK(false, "not a elliptic curve type");
+  }
 }
 
 static inline bool isBitsType(ScalarType t) {

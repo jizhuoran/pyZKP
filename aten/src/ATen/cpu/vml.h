@@ -96,8 +96,6 @@ IMPLEMENT_VML(tanh)
 IMPLEMENT_VML(trunc)
 IMPLEMENT_VML(lgamma)
 
-IMPLEMENT_VML(to_mont1)
-
 #if AT_MKL_ENABLED() && !defined(__APPLE__)
 
 // NB: LP64 MKL is the most commonly used and thus we assume it here. That means

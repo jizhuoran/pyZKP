@@ -5280,22 +5280,4 @@ REGISTER_NATIVE_OPERATOR_FUNCTOR(
       LogAndDumpSchema(n);
       return nullptr;
     });
-
-REGISTER_OPERATOR_FUNCTOR(aten::to_mont1, aten_to_mont1, [](Node* n) -> SROperator {
-  if (n->matches(torch::schema("aten::to_mont1(Tensor self) -> Tensor"))) {
-    return [](ProcessedNode* p_node) {
-      const auto& self = p_node->Input(0).toTensor();
-      if (p_node->Output(0).isNone()) {
-        p_node->Output(0) = at::cpu::to_mont1(self);
-        return;
-      }
-      auto& out = p_node->Output(0).toTensor();
-      fastResizeToZero(out);
-      at::cpu::to_mont1_out(out, self);
-    };
-  }
-  LogAndDumpSchema(n);
-  return nullptr;
-});
-
 } // namespace torch::jit

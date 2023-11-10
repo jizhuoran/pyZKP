@@ -718,16 +718,6 @@ static void modified_bessel_k1_kernel(TensorIteratorBase& iterator) {
     });
 } // modified_bessel_k1_kernel(TensorIteratorBase& iterator)
 
-static void to_mont1_kernel(TensorIteratorBase& iterator) {
-    TORCH_INTERNAL_ASSERT(iterator.ntensors() == 2);
-
-    AT_DISPATCH_FLOATING_TYPES(iterator.common_dtype(), "to_mont1_cpu", [&]() {
-        cpu_kernel(iterator, [](scalar_t x) {
-            return x;
-        });
-    });
-} // to_mont1_kernel(TensorIteratorBase& iterator)
-
 // TODO: Disable cont. branch to test more risky code
 
 #define IMPLEMENT_ITERATOR_LAMBDA(op)                                              \
@@ -878,8 +868,6 @@ REGISTER_DISPATCH(special_bessel_y0_stub, &CPU_CAPABILITY::bessel_y0_kernel);
 REGISTER_DISPATCH(special_bessel_y1_stub, &CPU_CAPABILITY::bessel_y1_kernel);
 REGISTER_DISPATCH(special_modified_bessel_i0_stub, &CPU_CAPABILITY::modified_bessel_i0_kernel);
 REGISTER_DISPATCH(special_modified_bessel_i1_stub, &CPU_CAPABILITY::modified_bessel_i1_kernel);
-
-REGISTER_DISPATCH(to_mont1_stub, &CPU_CAPABILITY::to_mont1_kernel);
 
 STATIC_IMPLEMENT_COMPLEX_KERNEL_WITH_AVX512(acos);
 STATIC_IMPLEMENT_COMPLEX_KERNEL_WITH_AVX512(asin);

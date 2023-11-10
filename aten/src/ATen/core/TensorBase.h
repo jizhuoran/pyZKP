@@ -248,13 +248,6 @@ class TORCH_API TensorBase {
     return impl_->strides();
   }
 
-  void to_curve(Curve curve_info, bool alread_in_mont) const {
-    impl_->to_curve(curve_info, alread_in_mont);
-  }
-
-  c10::FieldType field() const { return impl_->field(); }
-  void set_field(c10::FieldType field) { impl_->set_field(field); }
-
   // See impl::get_opt_names in ATen/NamedTensor.h for docs.
   c10::optional<DimnameList> opt_names() const {
     return impl::get_opt_names(unsafeGetTensorImpl());
@@ -417,14 +410,14 @@ class TORCH_API TensorBase {
     return impl_->dtype();
   }
 
+  /// Sets the `Tensor`'s dtype (`TypeMeta`).
+  void set_dtype(const caffe2::TypeMeta data_type) {
+    impl_->set_dtype(data_type);
+  }
+
   /// Returns a `Tensor`'s device.
   inline Device device() const {
     return impl_->device();
-  }
-
-  /// Returns a `Tensor`'s curve.
-  inline Curve curve() const {
-    return impl_->curve();
   }
 
   /// Returns a `Tensor`'s device index.

@@ -430,10 +430,6 @@ public:
     return map(std::log1p);
   }
 
-  Vectorized<T> to_mont1() const {
-    return map(std::log10);
-  }
-
   template <typename other_t_log2 = T,
             typename std::enable_if<!c10::is_complex<other_t_log2>::value, int>::type = 0>
   Vectorized<T> log2() const {

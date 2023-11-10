@@ -1174,7 +1174,6 @@ TORCH_LIBRARY_IMPL(aten, Batched, m) {
   UNARY_POINTWISE(tan);
   UNARY_POINTWISE(tanh);
   UNARY_POINTWISE(trunc);
-  UNARY_POINTWISE(to_mont1);
 #undef UNARY_POINTWISE
 #define TO_BATCHING_RULE(name, ...) \
   { \

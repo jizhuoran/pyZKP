@@ -15301,23 +15301,3 @@
   dispatch:
     CPU: to_base_out_cpu
     CUDA: to_base_out_cuda
-
-- func: to_mont1(Tensor self) -> Tensor
-  device_check: NoCheck   # TensorIterator
-  structured_delegate: to_mont1.out
-  variants: function, method
-  tags: [core, pointwise]
-
-- func: to_mont1_(Tensor(a!) self) -> Tensor(a!)
-  device_check: NoCheck   # TensorIterator
-  structured_delegate: to_mont1.out
-  variants: function, method
-  tags: pointwise
-
-- func: to_mont1.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
-  device_check: NoCheck   # TensorIterator
-  structured: True
-  structured_inherits: TensorIteratorBase
-  dispatch:
-    CPU: to_mont1_out
-  tags: pointwise

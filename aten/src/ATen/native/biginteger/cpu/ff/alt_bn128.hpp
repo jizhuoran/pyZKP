@@ -40,11 +40,11 @@ static const vec256 ALT_BN128_ONE = {   /* (1<<256)%P */
     TO_LIMB_T(0x666ea36f7879462c), TO_LIMB_T(0x0e0a77c19a07df2f)
 };
 typedef blst_256_t<254, ALT_BN128_P, 0x87d20782e4866389u,
-                        ALT_BN128_RR, ALT_BN128_ONE> alt_bn128_fp_mont;
-struct ALT_BN128_Fq_G1 : public alt_bn128_fp_mont {
+                        ALT_BN128_RR, ALT_BN128_ONE> alt_bn128_fq_mont;
+struct ALT_BN128_Fq_G1 : public alt_bn128_fq_mont {
     using mem_t = ALT_BN128_Fq_G1;
     inline ALT_BN128_Fq_G1() = default;
-    inline ALT_BN128_Fq_G1(const alt_bn128_fp_mont& a) : alt_bn128_fp_mont(a) {}
+    inline ALT_BN128_Fq_G1(const alt_bn128_fq_mont& a) : alt_bn128_fq_mont(a) {}
 };
 
 } // namespace native

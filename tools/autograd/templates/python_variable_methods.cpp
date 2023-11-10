@@ -998,65 +998,6 @@ static PyObject * THPVariable_to(PyObject* self, PyObject* args, PyObject* kwarg
   END_HANDLE_TH_ERRORS
 }
 
-
-
-static PyObject * THPVariable_field(PyObject* self, PyObject* args, PyObject* kwargs)
-{
-  HANDLE_TH_ERRORS
-  static PythonArgParser parser({
-    "field()",
-  });
-  auto& self_ = THPVariable_Unpack(self);
-  switch (self_.field()) {
-    case c10::FieldType::Base:
-      return PyUnicode_FromString("base space");
-    case c10::FieldType::Finite:
-      return PyUnicode_FromString("finite space");
-    case c10::FieldType::Montgomery:
-      return PyUnicode_FromString("Montgomery space");
-    default:
-      throw std::runtime_error("Unknown field");
-  }
-  END_HANDLE_TH_ERRORS
-}
-
-static PyObject * THPVariable_curve_info(PyObject* self, PyObject* args, PyObject* kwargs)
-{
-  HANDLE_TH_ERRORS
-  static PythonArgParser parser({
-    "curve_info()",
-  });
-  auto& self_ = THPVariable_Unpack(self);
-  auto curve = self_.curve();
-  return PyUnicode_FromString(curve.str().c_str());
-  END_HANDLE_TH_ERRORS
-}
-
-static PyObject * THPVariable_to_curve(PyObject* self, PyObject* args, PyObject* kwargs)
-{
-  HANDLE_TH_ERRORS
-  static PythonArgParser parser({
-    "to_curve(std::string family, std::string field, std::string group, bool already_in_mont=False)",
-  });
-  ParsedArgs<5> parsed_args;
-  auto r = parser.parse(self, args, kwargs, parsed_args);
-  if (r.has_torch_function()) {
-    return handle_torch_function(r, self, args, kwargs, THPVariableClass, "torch.Tensor");
-  }
-  auto family = r.string(0);
-  auto field = r.string(1);
-  auto group = r.string(2);
-  auto alread_in_mont = r.toBoolWithDefault(3, false);
-  auto& self_ = THPVariable_Unpack(self);
-  auto curve_info = c10::Curve(family, field, group);
-
-  if (curve_info.expected_last_dim() != self_.size(self_.dim()-1)) {
-    throw std::runtime_error("The last dimension of the tensor does not match the expected dimension of the curve");
-  }
-  self_.to_curve(curve_info, alread_in_mont);
-  return THPVariable_Wrap(self_);
-  END_HANDLE_TH_ERRORS
-}
 // implemented on the python object b/c arbitrarily nested list not declarable in native_functions.yaml
 // See: ATen/native/README.md for more context
 static PyObject * THPVariable_tolist(PyObject* self, PyObject* args)
@@ -1333,9 +1274,6 @@ PyMethodDef variable_methods[] = {
   {"to", castPyCFunctionWithKeywords(THPVariable_to), METH_VARARGS | METH_KEYWORDS, NULL},
   {"tolist", THPVariable_tolist, METH_NOARGS, NULL},
   {"type", castPyCFunctionWithKeywords(THPVariable_type), METH_VARARGS | METH_KEYWORDS, NULL},
-  {"to_curve", castPyCFunctionWithKeywords(THPVariable_to_curve), METH_VARARGS | METH_KEYWORDS, NULL},
-  {"curve_info", castPyCFunctionWithKeywords(THPVariable_curve_info), METH_VARARGS | METH_KEYWORDS, NULL},
-  {"field", castPyCFunctionWithKeywords(THPVariable_field), METH_VARARGS | METH_KEYWORDS, NULL},
   ${py_method_defs}
   {NULL}
 };

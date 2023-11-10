@@ -1,19 +1,37 @@
 #pragma once
 #include <cstdint>
-
 #include <c10/macros/Macros.h>
+
+namespace at {
+namespace native {
+
+struct ALT_BN128_Fr_G1;
+struct ALT_BN128_Fr_G2;
+struct ALT_BN128_Fq_G1;
+struct ALT_BN128_Fq_G2;
+struct BLS12_377_Fr_G1;
+struct BLS12_377_Fr_G2;
+struct BLS12_377_Fq_G1;
+struct BLS12_377_Fq_G2;
+struct BLS12_381_Fr_G1;
+struct BLS12_381_Fr_G2;
+struct BLS12_381_Fq_G1;
+struct BLS12_381_Fq_G2;
+struct MNT4753_Fr_G1;
+struct MNT4753_Fr_G2;
+struct MNT4753_Fq_G1;
+struct MNT4753_Fq_G2;
+
+} // namespace native
+} // namespace at
 
 namespace c10 {
 
-enum class FieldType : int8_t {
-  Base = 0,
-  Finite = 1,
-  Montgomery = 2,
-  COMPILE_TIME_MAX_CURVE_FIELD_TYPES = 3,
-};
+struct NOT_CURVE {                                    
+  NOT_CURVE() = delete;                                       
+};     
 
 struct alignas(8) Field64 {
-  using underlying = uint64_t;
   uint64_t val_;
   Field64() = default;
   C10_HOST_DEVICE explicit Field64(uint64_t val) : val_(val) {}
@@ -21,44 +39,115 @@ struct alignas(8) Field64 {
 };
 
 struct alignas(8) BigInteger {
-  using underlying = uint64_t;
   uint64_t val_;
   BigInteger() = default;
   C10_HOST_DEVICE explicit BigInteger(uint64_t val) : val_(val) {}
   operator uint64_t() const { return val_; }
 };
 
+struct alignas(8) BigInteger_Mont {
+  uint64_t val_;
+  BigInteger_Mont() = default;
+  C10_HOST_DEVICE explicit BigInteger_Mont(uint64_t val) : val_(val) {}
+  operator uint64_t() const { return val_; }
+};
+
 struct alignas(8) FiniteField {
-  using underlying = uint64_t;
   uint64_t val_;
   FiniteField() = default;
   C10_HOST_DEVICE explicit FiniteField(uint64_t val) : val_(val) {}
   operator uint64_t() const { return val_; }
 };
 
-struct alignas(8) EllipticCurve {
-  using underlying = uint64_t;
-  uint64_t val_;
-  EllipticCurve() = default;
-  C10_HOST_DEVICE explicit EllipticCurve(uint64_t val) : val_(val) {}
-  operator uint64_t() const { return val_; }
+
+#define DEF_BIGINTEGER(name)                                        \
+struct alignas(8) name##_Base {                                     \
+  using compute_type = at::native::name;                            \
+  uint64_t val_;                                                    \
+  name##_Base() = default;                                          \
+  C10_HOST_DEVICE explicit name##_Base(uint64_t val) : val_(val) {} \
+  operator uint64_t() const { return val_; }                        \
+};                                                                  \
+struct alignas(8) name##_Mont {                                     \
+  using compute_type = at::native::name;                            \
+  uint64_t val_;                                                    \
+  name##_Mont() = default;                                          \
+  C10_HOST_DEVICE explicit name##_Mont(uint64_t val) : val_(val) {} \
+  operator uint64_t() const { return val_; }                        \
 };
+
+#define APPLY_ALL_CURVE(FUNC) \
+FUNC(ALT_BN128_Fr_G1)         \
+FUNC(ALT_BN128_Fr_G2)         \
+FUNC(ALT_BN128_Fq_G1)         \
+FUNC(ALT_BN128_Fq_G2)         \
+FUNC(BLS12_377_Fr_G1)         \
+FUNC(BLS12_377_Fr_G2)         \
+FUNC(BLS12_377_Fq_G1)         \
+FUNC(BLS12_377_Fq_G2)         \
+FUNC(BLS12_381_Fr_G1)         \
+FUNC(BLS12_381_Fr_G2)         \
+FUNC(BLS12_381_Fq_G1)         \
+FUNC(BLS12_381_Fq_G2)         \
+FUNC(MNT4753_Fr_G1)           \
+FUNC(MNT4753_Fr_G2)           \
+FUNC(MNT4753_Fq_G1)           \
+FUNC(MNT4753_Fq_G2)
+
+APPLY_ALL_CURVE(DEF_BIGINTEGER);
+
+#define APPLY_ALL_BIGINTEGER_CASE(FUNC) \
+FUNC(Field64)                           \
+FUNC(BigInteger)                        \
+FUNC(BigInteger_Mont)                   \
+FUNC(FiniteField)                       \
+FUNC(ALT_BN128_Fr_G1_Base)              \
+FUNC(ALT_BN128_Fr_G2_Base)              \
+FUNC(ALT_BN128_Fq_G1_Base)              \
+FUNC(ALT_BN128_Fq_G2_Base)              \
+FUNC(BLS12_377_Fr_G1_Base)              \
+FUNC(BLS12_377_Fr_G2_Base)              \
+FUNC(BLS12_377_Fq_G1_Base)              \
+FUNC(BLS12_377_Fq_G2_Base)              \
+FUNC(BLS12_381_Fr_G1_Base)              \
+FUNC(BLS12_381_Fr_G2_Base)              \
+FUNC(BLS12_381_Fq_G1_Base)              \
+FUNC(BLS12_381_Fq_G2_Base)              \
+FUNC(MNT4753_Fr_G1_Base)                \
+FUNC(MNT4753_Fr_G2_Base)                \
+FUNC(MNT4753_Fq_G1_Base)                \
+FUNC(MNT4753_Fq_G2_Base)                \
+FUNC(ALT_BN128_Fr_G1_Mont)              \
+FUNC(ALT_BN128_Fr_G2_Mont)              \
+FUNC(ALT_BN128_Fq_G1_Mont)              \
+FUNC(ALT_BN128_Fq_G2_Mont)              \
+FUNC(BLS12_377_Fr_G1_Mont)              \
+FUNC(BLS12_377_Fr_G2_Mont)              \
+FUNC(BLS12_377_Fq_G1_Mont)              \
+FUNC(BLS12_377_Fq_G2_Mont)              \
+FUNC(BLS12_381_Fr_G1_Mont)              \
+FUNC(BLS12_381_Fr_G2_Mont)              \
+FUNC(BLS12_381_Fq_G1_Mont)              \
+FUNC(BLS12_381_Fq_G2_Mont)              \
+FUNC(MNT4753_Fr_G1_Mont)                \
+FUNC(MNT4753_Fr_G2_Mont)                \
+FUNC(MNT4753_Fq_G1_Mont)                \
+FUNC(MNT4753_Fq_G2_Mont)
+
+#define DEF_IS_FIELD(name)                                   \
+template<>                                                   \
+struct is_field<name> : public std::true_type {};
 
 template <typename T>
 struct is_field : public std::false_type {};
 
-template<>
-struct is_field<c10::Field64> : public std::true_type {};
+APPLY_ALL_BIGINTEGER_CASE(DEF_IS_FIELD);
 
-template<>
-struct is_field<c10::BigInteger> : public std::true_type {};
 
-template<>
-struct is_field<c10::FiniteField> : public std::true_type {};
+#define DEF_CASE(name) \
+  case at::k##name:
 
-template<>
-struct is_field<c10::EllipticCurve> : public std::true_type {};
+#define ALL_BIGINTEGER_CASE         \
+APPLY_ALL_BIGINTEGER_CASE(DEF_CASE)
 
 } // namespace c10
-
-

@@ -518,10 +518,6 @@ TORCH_LIBRARY_IMPL(aten, Named, m) {
   m.impl("zero_", CppFunction::makeFallthrough());
   m.impl("zeros_like", CppFunction::makeFallthrough());
 
-  m.impl("to_mont1", CppFunction::makeFallthrough());
-  m.impl("to_mont1.out", CppFunction::makeFallthrough());
-  m.impl("to_mont1_", CppFunction::makeFallthrough());
-
   // These weren't marked as supporting named tensors but were implicitly
   // supported because they were manually registered.  I'm not sure
   // if these registrations are right or not, but they preserve old behavior

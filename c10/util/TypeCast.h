@@ -122,45 +122,18 @@ struct static_cast_with_inter_type<
   }
 };
 
-template <>
-struct static_cast_with_inter_type<
-    uint64_t,
-    c10::Field64> {
-  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply(c10::Field64 src) {
-    return src.val_;
-  }
+#define BIGINTEGER_CAST(name)                                       \
+template <>                                                         \
+struct static_cast_with_inter_type<                                 \
+    uint64_t,                                                       \
+    c10::name> {                                                    \
+  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t \
+  apply(c10::name src) {                                            \
+    return src.val_;                                                \
+  }                                                                 \
 };
 
-template <>
-struct static_cast_with_inter_type<
-    uint64_t,
-    c10::BigInteger> {
-  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply( c10::BigInteger src) {
-    return src.val_;
-  }
-};
-
-template <>
-struct static_cast_with_inter_type<
-    uint64_t,
-    c10::FiniteField> {
-  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply(c10::FiniteField src) {
-    return src.val_;
-  }
-};
-
-template <>
-struct static_cast_with_inter_type<
-    uint64_t,
-    c10::EllipticCurve> {
-  C10_HOST_DEVICE __ubsan_ignore_undefined__ static inline uint64_t
-  apply(c10::EllipticCurve src) {
-    return src.val_;
-  }
-};
+APPLY_ALL_BIGINTEGER_CASE(BIGINTEGER_CAST);
 
 template <typename To, typename From>
 C10_HOST_DEVICE To convert(From f) {

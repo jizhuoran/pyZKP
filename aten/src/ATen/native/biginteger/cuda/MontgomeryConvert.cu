@@ -36,85 +36,44 @@ __global__ void to_base_kernel(const int64_t N, T* data) {
   }
 }
 
-template <typename T>
-static void to_mont(c10::EllipticCurve* self, const int64_t num) {
-  auto self_ptr = reinterpret_cast<T*>(self);
-  int64_t N = num / (sizeof(T)/sizeof(c10::EllipticCurve));
-  TORCH_INTERNAL_ASSERT(N > 0 && N <= std::numeric_limits<int32_t>::max());
-  int64_t grid = (N + block_work_size() - 1) / block_work_size();
-  auto stream = at::cuda::getCurrentCUDAStream();
-  to_mont_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
-  C10_CUDA_KERNEL_LAUNCH_CHECK();
-}
+#define CONVERT_ELEM(name) \
+else if (type == ScalarType::name##_Base) { return caffe2::TypeMeta::Make<name##_Mont>();} \
+else if (type == ScalarType::name##_Mont) { return caffe2::TypeMeta::Make<name##_Base>();}
 
-template <typename T>
-static void to_base(c10::EllipticCurve* self, const int64_t num) {
-  auto self_ptr = reinterpret_cast<T*>(self);
-  int64_t N = num / (sizeof(T)/sizeof(c10::EllipticCurve));
-  TORCH_INTERNAL_ASSERT(N > 0 && N <= std::numeric_limits<int32_t>::max());
-  int64_t grid = (N + block_work_size() - 1) / block_work_size();
-  auto stream = at::cuda::getCurrentCUDAStream();
-  to_base_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
-  C10_CUDA_KERNEL_LAUNCH_CHECK();
-}
-
-static void to_mont_cuda_template(Tensor& self) {
-
-  if(self.field() == c10::FieldType::Montgomery) {
-    throw std::runtime_error("Tensor is already in Montgomery form");
+caffe2::TypeMeta get_corresponding_type(const ScalarType type) {
+  if (false) { ; }
+  APPLY_ALL_CURVE(CONVERT_ELEM)
+  else {
+    throw std::runtime_error("Unsupported curve type");
   }
-  
-  AT_DISPATCH_CURVE_TYPES(self.scalar_type(), "to_mont_cuda", [&] {
-        CURVE_DISPATCH_TYPES(self.curve().type(), 
-                        to_mont, 
-                        self.mutable_data_ptr<scalar_t>(),
-                        self.numel());
-  });
+}
+#undef CONVERT_ELEM
 
-  self.set_field(c10::FieldType::Montgomery);
+static void to_mont_cpu_template(Tensor& self) {
+  AT_DISPATCH_FR_BASE_TYPES(self.scalar_type(), "to_mont_cpu", [&] {
+    auto self_ptr = reinterpret_cast<scalar_t::compute_type*>(self.mutable_data_ptr<scalar_t>());
+    int64_t N = self.numel() / num_uint64(self.scalar_type());
+    TORCH_INTERNAL_ASSERT(N > 0 && N <= std::numeric_limits<int32_t>::max());
+    int64_t grid = (N + block_work_size() - 1) / block_work_size();
+    auto stream = at::cuda::getCurrentCUDAStream();
+    to_mont_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+  });
+  self.set_dtype(get_corresponding_type(self.scalar_type()));
 }
 
-static void to_base_cuda_template(Tensor& self) {
-
-  if(self.field() == c10::FieldType::Base) {
-    throw std::runtime_error("Tensor is already in basegomery form");
-  }
-  
-  AT_DISPATCH_CURVE_TYPES(self.scalar_type(), "to_base_cuda", [&] {
-        CURVE_DISPATCH_TYPES(self.curve().type(), 
-                        to_base, 
-                        self.mutable_data_ptr<scalar_t>(),
-                        self.numel());
+static void to_base_cpu_template(Tensor& self) {
+  AT_DISPATCH_FR_MONT_TYPES(self.scalar_type(), "to_base_cpu", [&] {
+    auto self_ptr = reinterpret_cast<scalar_t::compute_type*>(self.mutable_data_ptr<scalar_t>());
+    int64_t N = self.numel() / num_uint64(self.scalar_type());
+    TORCH_INTERNAL_ASSERT(N > 0 && N <= std::numeric_limits<int32_t>::max());
+    int64_t grid = (N + block_work_size() - 1) / block_work_size();
+    auto stream = at::cuda::getCurrentCUDAStream();
+    to_base_kernel<<<grid, num_threads(), 0, stream>>>(N, self_ptr);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
   });
-
-  self.set_field(c10::FieldType::Base);
+  self.set_dtype(get_corresponding_type(self.scalar_type()));
 }
-
-
-// template <typename T>
-// static void to_base(c10::EllipticCurve* self, const int64_t num) {
-//   auto self_ptr = reinterpret_cast<T*>(self);
-//   int64_t num_ = num / (sizeof(T)/sizeof(c10::EllipticCurve));
-//   for(auto i = 0; i < num_; i++) {
-//     self_ptr[i].from();
-//   }
-// }
-
-// static void to_base_cuda_template(Tensor& self) {
-
-//   if(self.field() == c10::FieldType::Base) {
-//     throw std::runtime_error("Tensor is already in base form");
-//   }
-  
-//   AT_DISPATCH_CURVE_TYPES(self.scalar_type(), "to_base_cuda", [&] {
-//         CURVE_DISPATCH_TYPES(self.curve().type(), 
-//                         to_base, 
-//                         self.mutable_data_ptr<scalar_t>(),
-//                         self.numel());
-//   });
-
-//   self.set_field(c10::FieldType::Base);
-// }
 
 } // namespace
 

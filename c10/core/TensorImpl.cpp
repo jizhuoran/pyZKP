@@ -871,9 +871,6 @@ void TensorImpl::copy_generic_tensor_metadata(
     dest_impl->extra_meta_ = src_impl->extra_meta_->clone();
   }
 
-  dest_impl->field_ = src_impl->field_;
-  dest_impl->curve_opt_ = src_impl->curve_opt_;
-
   // NB: symbolic sizes and strides are copied as is custom policy, but python
   // policy is NOT (you have no Python object to dispatch to!)
   // NB: subclass relevant policy doesn't have to be copied; the

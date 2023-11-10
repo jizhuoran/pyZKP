@@ -391,10 +391,6 @@ pointwise_ops = [
     aten.sigmoid_backward.default,
     aten.tanh_backward.default,
     aten.threshold_backward.default,
-
-    aten.to_mont1.default,
-    aten.to_mont1.out,
-    aten.to_mont1_.default,
 ]
 
 

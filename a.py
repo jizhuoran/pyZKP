@@ -3,25 +3,16 @@ import torch.nn.functional as F
 
 print(torch.__path__)
 
-x = torch.tensor([[1, 2, 3, 4, 5, 6], [5, 6, 7, 8, 9, 10]], dtype=torch.big_integer)
-x.to_curve("bls12-377", "fq", "g1", already_in_mont=False)
-print(x.curve_info())
-print(x.field())
+x = torch.tensor([[1, 2, 3, 4, 5, 6], [5, 6, 7, 8, 9, 10]], dtype=torch.BLS12_377_Fr_G1_Base)
 print("===========")
 print(x)
-x = x.to("cuda")
-x.to_curve("bls12-377", "fq", "g1", already_in_mont=False)
-print(x.curve_info())
 y = F.to_mont(x)
 print(y)
 z = F.to_base(y)
 print(z)
 
-
 a = y.clone()
-print(a.curve_info())
-print(a.field())
-
+print(a)
 
 
 

@@ -105,7 +105,7 @@ struct C10_API Curve final {
     return curve_type_;
   }
 
-  uint8_t expected_last_dim() const noexcept {
+  uint8_t num_uint64() const noexcept {
     switch (type()) {
       case CurveType::BN254_Fr_G1 : return 4;
       case CurveType::BN254_Fr_G2 : return 4;

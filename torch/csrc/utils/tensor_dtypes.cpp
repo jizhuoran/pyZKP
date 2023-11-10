@@ -73,10 +73,76 @@ std::pair<std::string, std::string> getDtypeNames(at::ScalarType scalarType) {
       return std::make_pair("field64", "");
     case at::ScalarType::BigInteger:
       return std::make_pair("big_integer", "");
+    case at::ScalarType::BigInteger_Mont:
+      return std::make_pair("big_integer_mont", "");
     case at::ScalarType::FiniteField:
       return std::make_pair("finite_field", "");
-    case at::ScalarType::EllipticCurve:
-      return std::make_pair("elliptic_curve", "");
+    case at::ScalarType::NOT_CURVE:
+      return std::make_pair("should_never_use", "");
+    case at::ScalarType::ALT_BN128_Fr_G1_Base:
+      return std::make_pair("ALT_BN128_Fr_G1_Base", "");
+    case at::ScalarType::ALT_BN128_Fr_G2_Base:
+      return std::make_pair("ALT_BN128_Fr_G2_Base", "");
+    case at::ScalarType::ALT_BN128_Fq_G1_Base:
+      return std::make_pair("ALT_BN128_Fq_G1_Base", "");
+    case at::ScalarType::ALT_BN128_Fq_G2_Base:
+      return std::make_pair("ALT_BN128_Fq_G2_Base", "");
+    case at::ScalarType::BLS12_377_Fr_G1_Base:
+      return std::make_pair("BLS12_377_Fr_G1_Base", "");
+    case at::ScalarType::BLS12_377_Fr_G2_Base:
+      return std::make_pair("BLS12_377_Fr_G2_Base", "");
+    case at::ScalarType::BLS12_377_Fq_G1_Base:
+      return std::make_pair("BLS12_377_Fq_G1_Base", "");
+    case at::ScalarType::BLS12_377_Fq_G2_Base:
+      return std::make_pair("BLS12_377_Fq_G2_Base", "");
+    case at::ScalarType::BLS12_381_Fr_G1_Base:
+      return std::make_pair("BLS12_381_Fr_G1_Base", "");
+    case at::ScalarType::BLS12_381_Fr_G2_Base:
+      return std::make_pair("BLS12_381_Fr_G2_Base", "");
+    case at::ScalarType::BLS12_381_Fq_G1_Base:
+      return std::make_pair("BLS12_381_Fq_G1_Base", "");
+    case at::ScalarType::BLS12_381_Fq_G2_Base:
+      return std::make_pair("BLS12_381_Fq_G2_Base", "");
+    case at::ScalarType::MNT4753_Fr_G1_Base:
+      return std::make_pair("MNT4753_Fr_G1_Base", "");
+    case at::ScalarType::MNT4753_Fr_G2_Base:
+      return std::make_pair("MNT4753_Fr_G2_Base", "");
+    case at::ScalarType::MNT4753_Fq_G1_Base:
+      return std::make_pair("MNT4753_Fq_G1_Base", "");
+    case at::ScalarType::MNT4753_Fq_G2_Base:
+      return std::make_pair("MNT4753_Fq_G2_Base", "");
+    case at::ScalarType::ALT_BN128_Fr_G1_Mont:
+      return std::make_pair("ALT_BN128_Fr_G1_Mont", "");
+    case at::ScalarType::ALT_BN128_Fr_G2_Mont:
+      return std::make_pair("ALT_BN128_Fr_G2_Mont", "");
+    case at::ScalarType::ALT_BN128_Fq_G1_Mont:
+      return std::make_pair("ALT_BN128_Fq_G1_Mont", "");
+    case at::ScalarType::ALT_BN128_Fq_G2_Mont:
+      return std::make_pair("ALT_BN128_Fq_G2_Mont", "");
+    case at::ScalarType::BLS12_377_Fr_G1_Mont:
+      return std::make_pair("BLS12_377_Fr_G1_Mont", "");
+    case at::ScalarType::BLS12_377_Fr_G2_Mont:
+      return std::make_pair("BLS12_377_Fr_G2_Mont", "");
+    case at::ScalarType::BLS12_377_Fq_G1_Mont:
+      return std::make_pair("BLS12_377_Fq_G1_Mont", "");
+    case at::ScalarType::BLS12_377_Fq_G2_Mont:
+      return std::make_pair("BLS12_377_Fq_G2_Mont", "");
+    case at::ScalarType::BLS12_381_Fr_G1_Mont:
+      return std::make_pair("BLS12_381_Fr_G1_Mont", "");
+    case at::ScalarType::BLS12_381_Fr_G2_Mont:
+      return std::make_pair("BLS12_381_Fr_G2_Mont", "");
+    case at::ScalarType::BLS12_381_Fq_G1_Mont:
+      return std::make_pair("BLS12_381_Fq_G1_Mont", "");
+    case at::ScalarType::BLS12_381_Fq_G2_Mont:
+      return std::make_pair("BLS12_381_Fq_G2_Mont", "");
+    case at::ScalarType::MNT4753_Fr_G1_Mont:
+      return std::make_pair("MNT4753_Fr_G1_Mont", "");
+    case at::ScalarType::MNT4753_Fr_G2_Mont:
+      return std::make_pair("MNT4753_Fr_G2_Mont", "");
+    case at::ScalarType::MNT4753_Fq_G1_Mont:
+      return std::make_pair("MNT4753_Fq_G1_Mont", "");
+    case at::ScalarType::MNT4753_Fq_G2_Mont:
+      return std::make_pair("MNT4753_Fq_G2_Mont", "");
     default:
       throw std::runtime_error("Unimplemented scalar type");
   }
