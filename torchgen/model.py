@@ -1961,10 +1961,12 @@ class Argument:
             name = name_and_default
             default = None
         # TODO: deduplicate annotation matching with Return
+        # print(type_and_annot)
         match = re.match(r"Tensor\((.+)\)(.*)", type_and_annot)
         annotation: Optional[Annotation]
         if match:
             # If you update this, make sure the __str__ still works too
+            
             assert match.group(2) in [
                 "",
                 "?",

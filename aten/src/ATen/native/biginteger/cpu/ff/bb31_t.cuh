@@ -51,6 +51,7 @@ public:
     friend inline bb31_t operator+(bb31_t a, const bb31_t b)
     {   return a += b;   }
 
+
     inline bb31_t operator<<=(uint32_t l)
     {
         while (l--) {

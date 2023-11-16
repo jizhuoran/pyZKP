@@ -770,7 +770,10 @@ def gen_functionalization_definition(
         # I think we should either:
         # (1) fix their schemas (BC-breaking)
         # (2) hand-write their functionalization kernels
+        
         if str(g.func.name) not in MUTABLE_OPS_NOT_USING_FUNCTIONALIZATION:
+            print(g.func.name,g.has_composite_implicit_autograd_kernel)
+            print(modifies_arguments(g))
             assert g.has_composite_implicit_autograd_kernel or not modifies_arguments(g)
         return []
     else:
